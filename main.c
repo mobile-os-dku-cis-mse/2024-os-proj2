@@ -1,14 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
 
-void boot()
+#include "ds/pidq.h"
+
+pidq rqueue;
+
+void run()
 {
-	// allocate system resources (conceptually).
+	while (1);
+}
+
+void schedule()
+{
+	return;
 }
 
 void poweroff()
 {
-	// clear all system resources (conceptually).
+	while (!pidq_empty(&rqueue))
+		kill(pidq_pop(&rqueue), SIGTERM);
+
+	pidq_destroy(&rqueue);
+
+	exit(0);
+}
+
+void boot()
+{
+	pidq_init(&rqueue, 10);
+	while (!pidq_full(&rqueue))
+	{
+		pid_t pid = fork();
+
+		if (pid == -1)
+		{
+			perror("fork");
+			poweroff();
+		}
+		
+		if (pid)
+			pidq_push(&rqueue, pid);
+		else
+			run();
+	}
+
+	schedule();
 }
 
 int main()
