@@ -2,24 +2,38 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdbool.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
-#define PAGE_SIZE 4096            // Taille d'une page (4 KB)
-#define PHYSICAL_MEMORY_SIZE 65536 // Taille mémoire physique totale (64 KB)
-#define NUM_FRAMES (PHYSICAL_MEMORY_SIZE / PAGE_SIZE) // Nombre de cadres de page
-#define NUM_PROCESSES 10          // Nombre de processus utilisateur
-#define PAGE_TABLE_SIZE 1024      // Taille de la table de pages (1K entrées)
+// Taille d'une page mémoire
+#define PAGE_SIZE 4096
+#define NUM_FRAMES 64
+#define NUM_PROCESSES 10
+#define MSG_SIZE 256
 
+// Structure pour les entrées de table de pages
 typedef struct {
-    int frame_number;  // Numéro du cadre de page (PFN)
-    bool valid;        // Flag : true si l'entrée est valide, false sinon
+    int frame_number;
+    bool valid;
 } PageTableEntry;
 
+// Structure pour une table de pages
 typedef struct {
-    PageTableEntry entries[PAGE_TABLE_SIZE]; // Table de pages (tableau d'entrées)
+    PageTableEntry entries[NUM_FRAMES];
 } PageTable;
 
+// Structure pour le message IPC
 typedef struct {
-    int free_frames[NUM_FRAMES]; // Liste des cadres de page libres
-    int free_frame_count;        // Nombre de cadres libres
-} OSState;
+    long msg_type; // Type de message (identifie l'expéditeur)
+    int process_id;
+    int virtual_address;
+    int physical_address;
+    bool page_fault;
+} IPCMessage;
+
+int initialize_os(int *free_frames, int total_frames);
+void initialize_page_table(PageTable *page_table);
+void initialize_all_page_tables(PageTable page_tables[NUM_PROCESSES]);
