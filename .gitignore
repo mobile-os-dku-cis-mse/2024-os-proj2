@@ -1,0 +1,8 @@
+My_OS
+My_OS_debug
+My_OS_ftests
+My_OS_ref
+*.o
+*.gcno
+*.gcda
+unit_tests
