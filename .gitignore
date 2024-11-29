@@ -6,3 +6,4 @@ My_OS_ref
 *.gcno
 *.gcda
 unit_tests
+.vscode
