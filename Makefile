@@ -5,7 +5,9 @@
 ## Makefile
 ##
 
-SRC =	
+SRC =	OS_memory.c \
+		communication.c \
+		process.c \
 
 SRC_MAIN =	main.c
 
