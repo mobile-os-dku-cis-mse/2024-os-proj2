@@ -1,113 +1,41 @@
-##
-## EPITECH PROJECT, 2023
-## Zappy
-## File description:
-## Makefile
-##
+## Variable to be modified
+rm = rm -rf
 
-SRC =	OS_memory.c \
-		communication.c \
-		process.c \
+TARGET = virtual_memory_sim
 
-SRC_MAIN =	main.c
+CFLAGS = -Wextra -Wall -Iinclude
+LDFLAGS = -lcheck -lm -lpthread
 
-SRC_TEST =
+SRC = src/main.c \
+      src/logic.c \
+      src/log.c
 
-SRC_RELEASE	= $(SRC) $(SRC_MAIN)
-SRC_DEBUG	= $(SRC) $(SRC_MAIN)
+OBJ = $(SRC:.c=.o)
 
-OBJ_RELEASE	= $(SRC_RELEASE:%.c=obj/release/%.o)
-OBJ_DEBUG	= $(SRC_DEBUG:%.c=obj/debug/%.o)
-OBJ_TESTS	= $(SRC:%.c=obj/cov/%.o) $(SRC_TEST:%.c=obj/tests/%.o)
-OBJ_FTESTS	= $(SRC_DEBUG:%.c=obj/cov/%.o)
+all: $(TARGET)
 
-NAME_RELEASE= My_OS
-NAME_DEBUG	= My_OS_debug
-NAME_TESTS	= unit_tests
-NAME_FTESTS	= My_OS_ftests
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $< \
+	&& printf "[\033[1;35mcompiled\033[0m] % 29s\n" $< | tr ' ' '.' \
+	|| printf "[\033[1;31merror\033[0m] % 29s\n" $< | tr ' ' '.'
 
-CC			=	gcc
-CC_RELEASE	=	$(CC)
-CC_DEBUG	=	clang
-CC_TESTS	=	$(CC)
-CC_FTESTS	=	$(CC)
+$(TARGET): $(OBJ)
+	@$(CC) -o $@ $^
+	@echo -e "\e[1;36mFinished compiling $@\e[0m"
 
-CPPFLAGS	+=	-iquote include -D_GNU_SOURCE
-CFLAGS		+=	-Wall -Wextra
+.PHONY: all fclean clean re test run_test
 
-CFLAGS_RELEASE	=	$(CFLAGS) -O2
-CFLAGS_DEBUG	=	$(CFLAGS) -g3 -fsanitize=address
-CFLAGS_TESTS	=	$(CFLAGS) --coverage
-CFLAGS_FTESTS	=	$(CFLAGS) --coverage
+debug: CFLAGS += -g3
+debug: clean all
 
-LDFLAGS		+=
-LDLIBS		+=
-
-LDFLAGS_RELEASE	= $(LDFLAGS)
-LDFLAGS_DEBUG	= $(LDFLAGS) -fsanitize=address
-LDFLAGS_TESTS	= $(LDFLAGS) --coverage
-LDFLAGS_FTESTS	= $(LDFLAGS) --coverage
-
-LDLIBS_RELEASE	= $(LDLIBS)
-LDLIBS_DEBUG	= $(LDLIBS)
-LDLIBS_TESTS	= $(LDLIBS) -lcriterion
-LDLIBS_FTESTS	= $(LDLIBS)
-
-all:	$(NAME_RELEASE)
-debug:	$(NAME_DEBUG)
-
-obj/release/%.o:	src/%.c
-	@mkdir -p $(@D)
-	$(CC_RELEASE) -c $(CFLAGS_RELEASE) $(CPPFLAGS) $< -o $@
-
-obj/debug/%.o:	src/%.c
-	@mkdir -p $(@D)
-	$(CC_DEBUG) -c $(CFLAGS_DEBUG) $(CPPFLAGS) $< -o $@
-
-obj/cov/%.o:	src/%.c
-	@mkdir -p $(@D)
-	$(CC_TESTS) -c $(CFLAGS_TESTS) $(CPPFLAGS) $< -o $@
-
-obj/tests/%.o:	../tests/server/%.c
-	@mkdir -p $(@D)
-	$(CC_TESTS) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
-
-$(NAME_RELEASE): $(OBJ_RELEASE)
-	$(CC_RELEASE) $(LDFLAGS_RELEASE) $(LDLIBS_RELEASE) -o $@ $(OBJ_RELEASE)
-
-$(NAME_DEBUG): $(OBJ_DEBUG)
-	$(CC_DEBUG) $(LDFLAGS_DEBUG) $(LDLIBS_DEBUG) -o $@ $(OBJ_DEBUG)
-
-$(NAME_TESTS): $(OBJ_TESTS)
-	$(CC_TESTS) $(LDFLAGS_TESTS) $(LDLIBS_TESTS) -o $@ $(OBJ_TESTS)
-
-$(NAME_FTESTS): $(OBJ_FTESTS)
-	$(CC_FTESTS) $(LDFLAGS_FTESTS) $(LDLIBS_FTESTS) -o $@ $(OBJ_FTESTS)
-
-utests_run: clean_cov $(NAME_TESTS)
-	./$(NAME_TESTS)
-
-ftests_run: clean_cov $(NAME_FTESTS)
-	$(MAKE) -C ../tests/functional/
-
-tests_run: utests_run ftests_run
-	gcovr
-	gcovr -b
-
-clean_cov:
-	find . -name "*.gcda" -delete
-
-clean: clean_cov
-	find . -name "*.gcno" -delete
-	$(RM) -r ./obj
+clean:
+	@$(rm) $(OBJ) $(TEST_OBJ)
+	@echo "Removed .o files"
 
 fclean: clean
-	$(RM) $(NAME_RELEASE) $(NAME_DEBUG) $(NAME_TESTS)
+	@$(rm) $(TARGET) $(TEST_TARGET) \
+	@$(rm) simulation_logs.txt
+	@echo "Removed binary files"
 
 re: fclean
-	$(MAKE) all
-
-redebug: fclean
-	$(MAKE) debug
-
-.PHONY: all clean clean_cov fclean re  debug redebug tests_run
+	@$(MAKE) all
