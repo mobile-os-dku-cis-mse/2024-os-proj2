@@ -2,12 +2,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <sys/time.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 #include "ds/pidq.h"
 #include "wrap/wrap.h"
+#define TIME_QUANTUM 10
 
+int logfd;
+int msqid;
 pidq rqueue;
 int ticks;
 
@@ -38,14 +46,16 @@ void cleanup()
 	while (!pidq_empty(&rqueue))
 		kill(pidq_pop(&rqueue), SIGTERM);
 
+	while (wait(NULL) > 0);
+
+	close(logfd);
+	msgctl(msqid, IPC_RMID, NULL);
 	pidq_destroy(&rqueue);
 	exit(0);
 }
 
 void spawn()
 {
-	pidq_init(&rqueue, 10);
-
 	while (!pidq_full(&rqueue))
 	{
 		pid_t pid = fork();
@@ -82,8 +92,16 @@ void loop()
 	disable_ticks();
 }
 
+void setup()
+{
+	logfd = creat("log.txt", 0666);
+	msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0666);
+	pidq_init(&rqueue, 10);
+}
+
 int main()
 {
+	setup();
 	spawn();
 	loop();
 	cleanup();
