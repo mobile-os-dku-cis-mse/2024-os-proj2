@@ -29,6 +29,8 @@ ssize_t my_msgrcv(int msqid, int *data, int msgflg)
 	struct msgbuf msg;
 	memset(&msg, 0, sizeof(msg));
 	ssize_t bytes = msgrcv(msqid, &msg, sizeof(msg)-sizeof(long), getpid(), msgflg);
-	*data = msg.data;
+	if (data)
+		*data = msg.data;
+
 	return bytes;
 }
