@@ -18,10 +18,15 @@ int logfd;
 int msqid;
 pidq rqueue;
 int ticks;
+int slice_cnt;
 
 void run()
 {
-	while (1);
+	while (1)
+	{
+		my_msgrcv(msqid, NULL, 0);
+		printf("process[%d] did something\n", getpid());
+	}
 }
 
 void alarm_handler(int)
@@ -75,7 +80,13 @@ void spawn()
 
 void schedule()
 {
-	printf("scheduler invoked: %d\n", ticks);
+	my_msgsnd(msqid, pidq_peek(&rqueue), 1);
+
+	if (++slice_cnt == TIME_QUANTUM)
+	{
+		pidq_push(&rqueue, pidq_pop(&rqueue));
+		slice_cnt = 0;
+	}
 }
 
 void loop()
