@@ -13,20 +13,41 @@
 #include "ds/pidq.h"
 #include "wrap/wrap.h"
 #define TIME_QUANTUM 10
+typedef unsigned int uint;
+
+extern int msqid;
+extern void run();
 
 int logfd;
-int msqid;
 pidq rqueue;
 int ticks;
-int slice_cnt;
 
-void run()
+#define MEM_SIZE 1048576
+#define PAGE_SIZE 256
+#define PAGE_COUNT 4096
+uint *mem;
+uint *page_list;
+uint page_ptr;
+
+void mem_init()
 {
-	while (1)
-	{
-		my_msgrcv(msqid, NULL, 0);
-		printf("process[%d] did something\n", getpid());
-	}
+	mem = calloc(MEM_SIZE, sizeof(uint));
+	page_list = calloc(PAGE_COUNT, sizeof(uint));
+
+	for (int i = 1; i < PAGE_COUNT; i++)
+		page_list[i] = page_list[i-1] + PAGE_SIZE;
+
+	page_ptr = 0;
+}
+
+int mem_read(uint addr)
+{
+	return mem[addr];
+}
+
+void mem_write(uint addr, uint val)
+{
+	mem[addr] = val;
 }
 
 void alarm_handler(int)
@@ -53,9 +74,12 @@ void cleanup()
 
 	while (wait(NULL) > 0);
 
+	free(page_list);
+	free(mem);
+	pidq_destroy(&rqueue);
 	close(logfd);
 	msgctl(msqid, IPC_RMID, NULL);
-	pidq_destroy(&rqueue);
+
 	exit(0);
 }
 
@@ -80,12 +104,16 @@ void spawn()
 
 void schedule()
 {
+	static int remaining = TIME_QUANTUM;
+
 	my_msgsnd(msqid, pidq_peek(&rqueue), 1);
 
-	if (++slice_cnt == TIME_QUANTUM)
+	// my_msgrcv(pidq_pop(&rqueue), ...); we need to get the memory access request!
+
+	if (!--remaining)
 	{
 		pidq_push(&rqueue, pidq_pop(&rqueue));
-		slice_cnt = 0;
+		remaining = TIME_QUANTUM;
 	}
 }
 
@@ -105,8 +133,8 @@ void loop()
 
 void setup()
 {
-	logfd = creat("log.txt", 0666);
 	msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0666);
+	logfd = creat("log.txt", 0666);
 	pidq_init(&rqueue, 10);
 }
 
@@ -114,6 +142,7 @@ int main()
 {
 	setup();
 	spawn();
+	mem_init();
 	loop();
 	cleanup();
 
