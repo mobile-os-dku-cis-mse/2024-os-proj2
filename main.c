@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
@@ -11,9 +12,8 @@
 #include <sys/msg.h>
 
 #include "ds/pidq.h"
-#include "wrap/wrap.h"
+#include "shared/shared.h"
 #define TIME_QUANTUM 10
-typedef unsigned int uint;
 
 extern int msqid;
 extern void run();
@@ -25,14 +25,14 @@ int ticks;
 #define MEM_SIZE 1048576
 #define PAGE_SIZE 256
 #define PAGE_COUNT 4096
-uint *mem;
-uint *page_list;
-uint page_ptr;
+unsigned int *mem;
+unsigned int *page_list;
+unsigned int page_ptr;
 
 void mem_init()
 {
-	mem = calloc(MEM_SIZE, sizeof(uint));
-	page_list = calloc(PAGE_COUNT, sizeof(uint));
+	mem = calloc(MEM_SIZE, sizeof(unsigned int));
+	page_list = calloc(PAGE_COUNT, sizeof(unsigned int));
 
 	for (int i = 1; i < PAGE_COUNT; i++)
 		page_list[i] = page_list[i-1] + PAGE_SIZE;
@@ -40,12 +40,12 @@ void mem_init()
 	page_ptr = 0;
 }
 
-int mem_read(uint addr)
+int mem_read(unsigned int addr)
 {
 	return mem[addr];
 }
 
-void mem_write(uint addr, uint val)
+void mem_write(unsigned int addr, unsigned int val)
 {
 	mem[addr] = val;
 }
@@ -106,7 +106,7 @@ void schedule()
 {
 	static int remaining = TIME_QUANTUM;
 
-	my_msgsnd(msqid, pidq_peek(&rqueue), 1);
+	kill(pidq_peek(&rqueue), SIGCONT);
 
 	// my_msgrcv(pidq_pop(&rqueue), ...); we need to get the memory access request!
 
@@ -119,7 +119,7 @@ void schedule()
 
 void loop()
 {
-	my_sigaction(SIGALRM, alarm_handler);
+	set_sa_handler(SIGALRM, alarm_handler);
 	enable_ticks();
 
 	while (ticks < 100)

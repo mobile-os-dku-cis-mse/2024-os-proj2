@@ -1,2 +1,2 @@
 build:
-	gcc *.c ds/*.c wrap/*.c
+	gcc *.c ds/*.c shared/*.c
