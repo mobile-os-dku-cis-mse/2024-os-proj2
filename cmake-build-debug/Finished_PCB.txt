@@ -1,0 +1,110 @@
+========================================
+Process ID          : 872392
+State               : 1
+Arrival Time        : 0
+Start Time          : 5
+Completion Time     : 0
+Waiting Time        : 6
+Response Time       : 5
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872393
+State               : 1
+Arrival Time        : 0
+Start Time          : 9
+Completion Time     : 0
+Waiting Time        : 11
+Response Time       : 9
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872394
+State               : 1
+Arrival Time        : 0
+Start Time          : 13
+Completion Time     : 0
+Waiting Time        : 16
+Response Time       : 13
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872395
+State               : 1
+Arrival Time        : 0
+Start Time          : 17
+Completion Time     : 0
+Waiting Time        : 21
+Response Time       : 17
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872396
+State               : 1
+Arrival Time        : 0
+Start Time          : 21
+Completion Time     : 0
+Waiting Time        : 26
+Response Time       : 21
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872397
+State               : 1
+Arrival Time        : 0
+Start Time          : 25
+Completion Time     : 0
+Waiting Time        : 31
+Response Time       : 25
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872398
+State               : 1
+Arrival Time        : 0
+Start Time          : 29
+Completion Time     : 0
+Waiting Time        : 36
+Response Time       : 29
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872399
+State               : 1
+Arrival Time        : 0
+Start Time          : 33
+Completion Time     : 0
+Waiting Time        : 41
+Response Time       : 33
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872400
+State               : 1
+Arrival Time        : 0
+Start Time          : 37
+Completion Time     : 0
+Waiting Time        : 46
+Response Time       : 37
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872391
+State               : 1
+Arrival Time        : 6
+Start Time          : 41
+Completion Time     : 0
+Waiting Time        : 44
+Response Time       : 35
+Execution Time      : 1
+========================================
+========================================
+Process ID          : 872400
+State               : 1
+Arrival Time        : 42
+Start Time          : 85
+Completion Time     : 0
+Waiting Time        : 62
+Response Time       : 43
+Execution Time      : 6
+========================================

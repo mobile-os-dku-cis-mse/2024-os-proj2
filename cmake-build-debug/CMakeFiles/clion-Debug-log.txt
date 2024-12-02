@@ -1,0 +1,4 @@
+/home/hochacha/.cache/JetBrains/RemoteDev/dist/5dc3f598cfaa5_CLion-243.21565.198/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/hochacha/.cache/JetBrains/RemoteDev/dist/5dc3f598cfaa5_CLion-243.21565.198/bin/ninja/linux/x64/ninja -G Ninja -S /home/hochacha/os_hw/2024-os-proj2 -B /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug

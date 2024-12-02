@@ -1,0 +1,13 @@
+# ninja log v6
+2	16	1732559629834440404	CMakeFiles/scheduler.dir/src/entity/page_manager.c.o	ddcff082a6bd5ba7
+2	16	1732559629834440404	CMakeFiles/scheduler.dir/src/util/shared_memory.c.o	fe47154182596b1b
+1	37	1732559737327075339	CMakeFiles/scheduler.dir/src/entity/scheduler.c.o	a4fc4d4a0d7064d6
+0	27	1732559883944376142	CMakeFiles/scheduler.dir/src/entity/child.c.o	6cfe5c995fde0aa6
+27	42	1732559883972376428	scheduler	b0a16639d2e352fe
+1	24	1732559629834440404	CMakeFiles/scheduler.dir/src/main.c.o	a9de75f98eeade5
+2	20	1732541986416784453	CMakeFiles/scheduler.dir/src/util/page_manager.c.o	f4c5f7d8e92a58cb
+1	20	1732559629834440404	CMakeFiles/scheduler.dir/src/util/process.c.o	503e436b54dabd52
+2	19	1732559629834440404	CMakeFiles/scheduler.dir/src/util/message_queue.c.o	799299a4ff58bce2
+3	24	1732544775657859066	CMakeFiles/scheduler.dir/src/util/timer.c.o	ab5bf270792ed58a
+3	28	1732544775657859066	CMakeFiles/scheduler.dir/src/util/pid_queue.c.o	5c7db6b26e4e92b7
+1	13	1732962056982889798	build.ninja	cd5dad29f1f812f6
