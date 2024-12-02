@@ -13,18 +13,20 @@
 
 #include "ds/pcbq.h"
 #include "shared/shared.h"
+
 #define TIME_QUANTUM 10
+#define PAGE_COUNT 4096
+#define PAGE_SIZE 256
+#define ENTRY_COUNT 64
 
 extern int msqid;
 extern void run();
 
 int logfd;
 pcbq rqueue;
+pcb cur;
 int ticks;
 
-#define MEM_SIZE 1048576
-#define PAGE_SIZE 256
-#define PAGE_COUNT 4096
 unsigned int *mem;
 unsigned int *page_list;
 unsigned int page_ptr;
@@ -40,14 +42,54 @@ void mem_init()
 	page_ptr = 0;
 }
 
-int mem_read(unsigned int addr)
+unsigned int mem_translate(unsigned int vaddr)
 {
-	return mem[addr];
+	if (!cur.page_tbl)
+		cur.page_tbl = calloc(ENTRY_COUNT, sizeof(unsigned int*));
+
+	const unsigned int MASK_1 = 0xFC000;
+	const unsigned int MASK_2 = 0x03F00;
+	const unsigned int MASK_OFF = 0x000FF;
+
+	unsigned int off1 = (vaddr & MASK_1) >> 14;
+	unsigned int off2 = (vaddr & MASK_2) >> 8;
+	unsigned int off = (vaddr & MASK_OFF);
+
+	if (!cur.page_tbl[off1])
+	{
+		cur.page_tbl[off1] = malloc(ENTRY_COUNT * sizeof(unsigned int));
+		memset(cur.page_tbl[off1], 0xFF, ENTRY_COUNT * sizeof(unsigned int));
+	}
+
+	if (cur.page_tbl[off1][off2] == -1)
+	{
+		if (page_ptr == PAGE_SIZE)
+			return -1;
+
+		cur.page_tbl[off1][off2] = page_list[page_ptr++];
+	}
+
+	return cur.page_tbl[off1][off2] + off;
 }
 
-void mem_write(unsigned int addr, unsigned int val)
+int mem_read(unsigned int vaddr)
 {
-	mem[addr] = val;
+	unsigned int target = mem_translate(vaddr);
+
+	if (target == -1);
+		//printf("error");
+	else
+		return mem[target];
+}
+
+void mem_write(unsigned int vaddr, unsigned int val)
+{
+	unsigned int target = mem_translate(vaddr);
+
+	if (target == -1);
+		//printf("error");
+	else
+		mem[target] = val;
 }
 
 void alarm_handler(int)
@@ -70,7 +112,14 @@ void disable_ticks()
 void cleanup()
 {
 	while (!pcbq_empty(&rqueue))
-		kill(pcbq_pop(&rqueue).pid, SIGTERM);
+	{
+		cur = pcbq_pop(&rqueue);
+		kill(cur.pid, SIGTERM);
+
+		for (int i = 0; i < ENTRY_COUNT; i++)
+			free(cur.page_tbl[i]);
+		free(cur.page_tbl);
+	}
 
 	while (wait(NULL) > 0);
 
@@ -106,19 +155,35 @@ void schedule()
 {
 	static int remaining = TIME_QUANTUM;
 
-	kill(pcbq_peek(&rqueue).pid, SIGCONT);
+	kill(cur.pid, SIGCONT);
 
-	// my_msgrcv(pidq_pop(&rqueue), ...); we need to get the memory access request!
+	struct msgbuf buf;
+	msgrcv(msqid, &buf, sizeof(buf) - sizeof(long), getpid(), 0);
+
+	for (int i = 0; i < 10; i++)
+	{
+		// write flag.
+		if (buf.rwflag & (1 << i))
+			mem_write(buf.vaddr[i], buf.rwval[i]);
+
+		// read flag.
+		else
+			buf.rwval[i] = mem_read(buf.vaddr[i]);
+	}
 
 	if (!--remaining)
 	{
-		pcbq_push(&rqueue, pcbq_pop(&rqueue));
+		pcbq_push(&rqueue, cur);
+		cur = pcbq_pop(&rqueue);
 		remaining = TIME_QUANTUM;
 	}
 }
 
 void loop()
 {
+	// set-up the first running process.
+	cur = pcbq_pop(&rqueue);
+
 	set_sa_handler(SIGALRM, alarm_handler);
 	enable_ticks();
 
@@ -129,6 +194,9 @@ void loop()
 	}
 
 	disable_ticks();
+
+	// session has finished; currenly running process is forced back into the queue.
+	pcbq_push(&rqueue, cur);
 }
 
 void setup()
