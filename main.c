@@ -11,7 +11,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-#include "ds/pidq.h"
+#include "ds/pcbq.h"
 #include "shared/shared.h"
 #define TIME_QUANTUM 10
 
@@ -19,7 +19,7 @@ extern int msqid;
 extern void run();
 
 int logfd;
-pidq rqueue;
+pcbq rqueue;
 int ticks;
 
 #define MEM_SIZE 1048576
@@ -69,14 +69,14 @@ void disable_ticks()
 
 void cleanup()
 {
-	while (!pidq_empty(&rqueue))
-		kill(pidq_pop(&rqueue), SIGTERM);
+	while (!pcbq_empty(&rqueue))
+		kill(pcbq_pop(&rqueue).pid, SIGTERM);
 
 	while (wait(NULL) > 0);
 
 	free(page_list);
 	free(mem);
-	pidq_destroy(&rqueue);
+	pcbq_destroy(&rqueue);
 	close(logfd);
 	msgctl(msqid, IPC_RMID, NULL);
 
@@ -85,7 +85,7 @@ void cleanup()
 
 void spawn()
 {
-	while (!pidq_full(&rqueue))
+	while (!pcbq_full(&rqueue))
 	{
 		pid_t pid = fork();
 
@@ -96,7 +96,7 @@ void spawn()
 		}
 		
 		if (pid)
-			pidq_push(&rqueue, pid);
+			pcbq_push(&rqueue, (pcb) {pid, NULL});
 		else
 			run();
 	}
@@ -106,13 +106,13 @@ void schedule()
 {
 	static int remaining = TIME_QUANTUM;
 
-	kill(pidq_peek(&rqueue), SIGCONT);
+	kill(pcbq_peek(&rqueue).pid, SIGCONT);
 
 	// my_msgrcv(pidq_pop(&rqueue), ...); we need to get the memory access request!
 
 	if (!--remaining)
 	{
-		pidq_push(&rqueue, pidq_pop(&rqueue));
+		pcbq_push(&rqueue, pcbq_pop(&rqueue));
 		remaining = TIME_QUANTUM;
 	}
 }
@@ -135,7 +135,7 @@ void setup()
 {
 	msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0666);
 	logfd = creat("log.txt", 0666);
-	pidq_init(&rqueue, 10);
+	pcbq_init(&rqueue, 10);
 }
 
 int main()
