@@ -4,7 +4,7 @@
 #define PCB_QUEUE_H
 
 #include <sys/types.h>
-#include "paging.h"
+#include "../paging/paging.h"
 // 프로세스 상태 정의
 #define PROCESS_READY    0
 #define PROCESS_RUNNING  1

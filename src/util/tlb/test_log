@@ -1,0 +1,318 @@
+Starting TLB tests...
+
+=== Testing TLB Initialization ===
+Initial TLB state after initialization:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    0	0x00000000	0x00000000	       0	1746822998	   22073		118864384
+    1	    0	0x0000003e	0x00000015	117351010	   32574	      96		       0
+    2	    0	0x00000000	0x00000000	       0	    4096	       0		118884224
+    3	    0	0x0000003e	0x06fc3bbd	   64768	       0	23593639		       0
+    4	    0	0x00000001	0x00000000	    1000	    1000	       0		       0
+    5	    0	0x00000000	0x00000000	    4096	       0	       0		       0
+    6	    0	0x000000b7	0x00000000	       0	1733154498	       0		768278147
+    7	    0	0x00000000	0x674dd6c2	768278147	       0	       0		       0
+    8	    0	0x00000000	0x00000000	       0	      64	       0		-805215232
+    9	    0	0x00000018	0x07160780	117255788	   32574	1746822998		   22073
+   10	    0	0x000000e0	0x00007f3e	       0	      21	       0		118884224
+   11	    0	0x0000003e	0x00000015	1746822998	   22073	118864384		   32574
+   12	    0	0x00000015	0x00000000	   32574	       0	       0		       0
+   13	    0	0x00000000	0x0000000d	      21	       0	118884224		   32574
+   14	    0	0x00000056	0x00005639	   32574	118867456	   32574		119238720
+   15	    0	0x0000003e	0x06fc5f1c	-58765312	   32767	16777216		     257
+
+TLB initialization test passed
+
+=== Testing TLB Lookup Hit/Miss ===
+Adding entry - Virtual Address: 0x1234, Frame Number: 0x12
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000012	0x00000012	       1	       1	   22073		118864384
+    1	    0	0x0000003e	0x00000015	117351010	   32574	      96		       0
+    2	    0	0x00000000	0x00000000	       0	    4096	       0		118884224
+    3	    0	0x0000003e	0x06fc3bbd	   64768	       0	23593639		       0
+    4	    0	0x00000001	0x00000000	    1000	    1000	       0		       0
+    5	    0	0x00000000	0x00000000	    4096	       0	       0		       0
+    6	    0	0x000000b7	0x00000000	       0	1733154498	       0		768278147
+    7	    0	0x00000000	0x674dd6c2	768278147	       0	       0		       0
+    8	    0	0x00000000	0x00000000	       0	      64	       0		-805215232
+    9	    0	0x00000018	0x07160780	117255788	   32574	1746822998		   22073
+   10	    0	0x000000e0	0x00007f3e	       0	      21	       0		118884224
+   11	    0	0x0000003e	0x00000015	1746822998	   22073	118864384		   32574
+   12	    0	0x00000015	0x00000000	   32574	       0	       0		       0
+   13	    0	0x00000000	0x0000000d	      21	       0	118884224		   32574
+   14	    0	0x00000056	0x00005639	   32574	118867456	   32574		119238720
+   15	    0	0x0000003e	0x06fc5f1c	-58765312	   32767	16777216		     257
+
+
+Testing TLB hit with address 0x1234
+Hit successful! Physical address: 0x00001234
+
+Testing TLB miss with address 0x5678
+Miss confirmed!
+TLB lookup hit/miss test passed
+
+=== Testing FIFO Replacement ===
+Filling TLB with 16 entries...
+Adding entry 0 - Virtual Address: 0x0000, Frame: 0
+Adding entry 1 - Virtual Address: 0x0100, Frame: 1
+Adding entry 2 - Virtual Address: 0x0200, Frame: 2
+Adding entry 3 - Virtual Address: 0x0300, Frame: 3
+Adding entry 4 - Virtual Address: 0x0400, Frame: 4
+Adding entry 5 - Virtual Address: 0x0500, Frame: 5
+Adding entry 6 - Virtual Address: 0x0600, Frame: 6
+Adding entry 7 - Virtual Address: 0x0700, Frame: 7
+Adding entry 8 - Virtual Address: 0x0800, Frame: 8
+Adding entry 9 - Virtual Address: 0x0900, Frame: 9
+Adding entry 10 - Virtual Address: 0x0a00, Frame: 10
+Adding entry 11 - Virtual Address: 0x0b00, Frame: 11
+Adding entry 12 - Virtual Address: 0x0c00, Frame: 12
+Adding entry 13 - Virtual Address: 0x0d00, Frame: 13
+Adding entry 14 - Virtual Address: 0x0e00, Frame: 14
+Adding entry 15 - Virtual Address: 0x0f00, Frame: 15
+
+TLB state after filling:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	4236149440		       1
+    1	    1	0x00000001	0x00000001	       1	       1	      96		       0
+    2	    1	0x00000002	0x00000002	       1	       1	       0		118884224
+    3	    1	0x00000003	0x00000003	       1	       1	23593639		       0
+    4	    1	0x00000004	0x00000004	       1	       1	       0		       0
+    5	    1	0x00000005	0x00000005	       1	       1	       0		       0
+    6	    1	0x00000006	0x00000006	       1	       1	       0		768278147
+    7	    1	0x00000007	0x00000007	       1	       1	       0		       0
+    8	    1	0x00000008	0x00000008	       1	       1	       0		-805215232
+    9	    1	0x00000009	0x00000009	       1	       1	1746822998		   22073
+   10	    1	0x0000000a	0x0000000a	       1	       1	       0		118884224
+   11	    1	0x0000000b	0x0000000b	       1	       1	118864384		   32574
+   12	    1	0x0000000c	0x0000000c	       1	       1	       0		       0
+   13	    1	0x0000000d	0x0000000d	       1	       1	118884224		   32574
+   14	    1	0x0000000e	0x0000000e	       1	       1	   32574		119238720
+   15	    1	0x0000000f	0x0000000f	       1	       1	16777216		     257
+
+
+Adding new entry to trigger FIFO replacement - VA: 0x1000
+
+TLB state after replacement:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000010	0x00000010	       1	       1	4236149440		       1
+    1	    1	0x00000001	0x00000001	       1	       1	      96		       0
+    2	    1	0x00000002	0x00000002	       1	       1	       0		118884224
+    3	    1	0x00000003	0x00000003	       1	       1	23593639		       0
+    4	    1	0x00000004	0x00000004	       1	       1	       0		       0
+    5	    1	0x00000005	0x00000005	       1	       1	       0		       0
+    6	    1	0x00000006	0x00000006	       1	       1	       0		768278147
+    7	    1	0x00000007	0x00000007	       1	       1	       0		       0
+    8	    1	0x00000008	0x00000008	       1	       1	       0		-805215232
+    9	    1	0x00000009	0x00000009	       1	       1	1746822998		   22073
+   10	    1	0x0000000a	0x0000000a	       1	       1	       0		118884224
+   11	    1	0x0000000b	0x0000000b	       1	       1	118864384		   32574
+   12	    1	0x0000000c	0x0000000c	       1	       1	       0		       0
+   13	    1	0x0000000d	0x0000000d	       1	       1	118884224		   32574
+   14	    1	0x0000000e	0x0000000e	       1	       1	   32574		119238720
+   15	    1	0x0000000f	0x0000000f	       1	       1	16777216		     257
+
+Verified: First entry was replaced (TLB miss for VA: 0x0000)
+Verified: New entry is present (TLB hit for VA: 0x1000)
+FIFO replacement test passed
+
+=== Testing LRU Replacement ===
+Filling TLB with 16 entries...
+Adding entry 0 - Virtual Address: 0x0000, Frame: 0
+Adding entry 1 - Virtual Address: 0x0100, Frame: 1
+Adding entry 2 - Virtual Address: 0x0200, Frame: 2
+Adding entry 3 - Virtual Address: 0x0300, Frame: 3
+Adding entry 4 - Virtual Address: 0x0400, Frame: 4
+Adding entry 5 - Virtual Address: 0x0500, Frame: 5
+Adding entry 6 - Virtual Address: 0x0600, Frame: 6
+Adding entry 7 - Virtual Address: 0x0700, Frame: 7
+Adding entry 8 - Virtual Address: 0x0800, Frame: 8
+Adding entry 9 - Virtual Address: 0x0900, Frame: 9
+Adding entry 10 - Virtual Address: 0x0a00, Frame: 10
+Adding entry 11 - Virtual Address: 0x0b00, Frame: 11
+Adding entry 12 - Virtual Address: 0x0c00, Frame: 12
+Adding entry 13 - Virtual Address: 0x0d00, Frame: 13
+Adding entry 14 - Virtual Address: 0x0e00, Frame: 14
+Adding entry 15 - Virtual Address: 0x0f00, Frame: 15
+
+TLB state after filling:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	       0		       1
+    1	    1	0x00000001	0x00000001	       1	       1	       1		       1
+    2	    1	0x00000002	0x00000002	       1	       1	       2		       1
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       1
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       1
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       1
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       1
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       1
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       1
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       1
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       1
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       1
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       1
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       1
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       1
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       1
+
+
+Accessing first entry (VA: 0x0000) to update its timestamp
+TLB state after accessing first entry:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	      16		       1
+    1	    1	0x00000001	0x00000001	       1	       1	       1		       1
+    2	    1	0x00000002	0x00000002	       1	       1	       2		       1
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       1
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       1
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       1
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       1
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       1
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       1
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       1
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       1
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       1
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       1
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       1
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       1
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       1
+
+
+Adding new entry to trigger LRU replacement - VA: 0x1000
+
+Final TLB state:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	      16		       1
+    1	    1	0x00000010	0x00000010	       1	       1	      17		       1
+    2	    1	0x00000002	0x00000002	       1	       1	       2		       1
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       1
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       1
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       1
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       1
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       1
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       1
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       1
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       1
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       1
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       1
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       1
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       1
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       1
+
+Verified: Recently accessed entry still present
+LRU replacement test passed
+
+=== Testing Second Chance Algorithm Replacement ===
+Filling TLB with 16 entries...
+Adding entry 0 - Virtual Address: 0x0000, Frame: 0
+Adding entry 1 - Virtual Address: 0x0100, Frame: 1
+Adding entry 2 - Virtual Address: 0x0200, Frame: 2
+Adding entry 3 - Virtual Address: 0x0300, Frame: 3
+Adding entry 4 - Virtual Address: 0x0400, Frame: 4
+Adding entry 5 - Virtual Address: 0x0500, Frame: 5
+Adding entry 6 - Virtual Address: 0x0600, Frame: 6
+Adding entry 7 - Virtual Address: 0x0700, Frame: 7
+Adding entry 8 - Virtual Address: 0x0800, Frame: 8
+Adding entry 9 - Virtual Address: 0x0900, Frame: 9
+Adding entry 10 - Virtual Address: 0x0a00, Frame: 10
+Adding entry 11 - Virtual Address: 0x0b00, Frame: 11
+Adding entry 12 - Virtual Address: 0x0c00, Frame: 12
+Adding entry 13 - Virtual Address: 0x0d00, Frame: 13
+Adding entry 14 - Virtual Address: 0x0e00, Frame: 14
+Adding entry 15 - Virtual Address: 0x0f00, Frame: 15
+
+TLB state after filling:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	      18		       0
+    1	    1	0x00000001	0x00000001	       1	       1	      17		       0
+    2	    1	0x00000002	0x00000002	       1	       1	       2		       0
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       0
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       0
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       0
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       0
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       0
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       0
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       0
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       0
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       0
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       0
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       0
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       0
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       0
+
+
+Accessing first two entries to set their reference bits:
+Accessing VA: 0x0000
+Accessing VA: 0x0100
+
+TLB state after accessing entries:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	      19		       1
+    1	    1	0x00000001	0x00000001	       1	       1	      20		       1
+    2	    1	0x00000002	0x00000002	       1	       1	       2		       0
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       0
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       0
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       0
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       0
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       0
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       0
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       0
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       0
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       0
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       0
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       0
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       0
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       0
+
+
+Adding new entry to trigger SCA replacement - VA: 0x1000
+
+Final TLB state:
+
+Current TLB State:
+Index	Valid	VPN	Frame	R/W	U/S	Timestamp	SCA
+-----------------------------------------------------
+    0	    1	0x00000000	0x00000000	       1	       1	      19		       0
+    1	    1	0x00000001	0x00000001	       1	       1	      20		       0
+    2	    1	0x00000010	0x00000010	       1	       1	       2		       0
+    3	    1	0x00000003	0x00000003	       1	       1	       3		       0
+    4	    1	0x00000004	0x00000004	       1	       1	       4		       0
+    5	    1	0x00000005	0x00000005	       1	       1	       5		       0
+    6	    1	0x00000006	0x00000006	       1	       1	       6		       0
+    7	    1	0x00000007	0x00000007	       1	       1	       7		       0
+    8	    1	0x00000008	0x00000008	       1	       1	       8		       0
+    9	    1	0x00000009	0x00000009	       1	       1	       9		       0
+   10	    1	0x0000000a	0x0000000a	       1	       1	      10		       0
+   11	    1	0x0000000b	0x0000000b	       1	       1	      11		       0
+   12	    1	0x0000000c	0x0000000c	       1	       1	      12		       0
+   13	    1	0x0000000d	0x0000000d	       1	       1	      13		       0
+   14	    1	0x0000000e	0x0000000e	       1	       1	      14		       0
+   15	    1	0x0000000f	0x0000000f	       1	       1	      15		       0
+
+Verified: Recently accessed entries still present
+SCA replacement test passed
+
+All TLB tests passed successfully!

@@ -15,7 +15,9 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1,
+						2
 					]
 				}
 			],
@@ -30,12 +32,28 @@
 					"name" : "2024_os_proj2",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1,
+						2
 					]
 				}
 			],
 			"targets" : 
 			[
+				{
+					"directoryIndex" : 0,
+					"id" : "paging_test::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-paging_test-Debug-25e28d579774cae00de9.json",
+					"name" : "paging_test",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "paging_test2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-paging_test2-Debug-7b79ba8b4d451c4a5763.json",
+					"name" : "paging_test2",
+					"projectIndex" : 0
+				},
 				{
 					"directoryIndex" : 0,
 					"id" : "scheduler::@6890427a1f51a3e7e1df",

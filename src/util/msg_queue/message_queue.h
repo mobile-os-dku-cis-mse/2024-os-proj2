@@ -4,7 +4,7 @@
 
 #ifndef MESSGE_QUEUE_H
 #define MESSGE_QUEUE_H
-#include "pid_queue.h"
+#include "../pid_queue/pid_queue.h"
 
 #define MESSAGE_TYPE_IO_FIN 0
 #define MESSAGE_TYPE_IO_REQ 1
@@ -38,6 +38,7 @@ typedef struct{
     int msg_t;
     pid_t pid;
 }paddr_t;
+
 int init_msg_queue();
 void close_msg_queue();
 #endif //MESSGE_QUEUE_H

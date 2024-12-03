@@ -27,3 +27,20 @@ add_executable(scheduler
         #src/util/page_manager.h
         #src/temp.c
 )
+
+
+add_executable(
+        paging_test
+        src/util/paging/test/paging_test.c
+        src/util/tlb/tlb.c
+        src/util/frame_list/frame_list.c
+        src/util/paging/paging.c
+)
+
+add_executable(
+        paging_test2
+        src/util/paging/test/paging_test2.c
+        src/util/tlb/tlb.c
+        src/util/frame_list/frame_list.c
+        src/util/paging/paging.c
+)

@@ -4,15 +4,35 @@
 
 #include "tlb.h"
 
+/*
+    System Architecture
+
+    Virttual Memory 
+    - 16bit address space
+      - 4bit upper index
+      - 4bit lower index
+      - 8bit offset
+    - 256B page size
+    - 256 page entries
+
+    Physical Memory
+    - 32bit address space
+    - 16KB sized shared memory
+    - 256B page size
+
+    Swapping
+    - 1MB File (let the file stores 4096 pages)
+    - 256B page size
+
+*/
+
+
 void initialize_tlb(tlb_t* tlb) {
     for (int i = 0; i < TLB_SIZE; i++) {
         tlb->entries[i].valid = 0;
     }
     tlb->next_replace_index = 0;
 }
-
-
-
 
 int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr) {
     uint8_t upper_index = (vaddr >> 12) & 0xF;
