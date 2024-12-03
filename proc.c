@@ -18,6 +18,9 @@ void run()
 	srand(getpid());
 	set_sa_handler(SIGCONT, null_handler);
 
+	unsigned int lower_bound = rand() % (MEM_SIZE - 4096);
+	unsigned int upper_bound = lower_bound + 4096;
+
 	while (1)
 	{
 		pause();
@@ -25,16 +28,16 @@ void run()
 		struct msgbuf buf;
 		memset(&buf, 0, sizeof(buf));
 		buf.mtype = getppid();
-
+		
 		for (int i = 0; i < 10; i++)
 		{
-			buf.vaddr[i] = rand() % MEM_SIZE;
+			buf.vaddr[i] = rand() % (upper_bound - lower_bound) + lower_bound + i;
 
 			if (rand() % 2)
 			{
 				// 0 means read, 1 means write.
 				buf.rwflag |= 1 << i;
-				buf.rwval[i] = rand();
+				buf.rwval[i] = rand() % 0x0100;
 			}
 		}
 
