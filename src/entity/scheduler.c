@@ -20,6 +20,7 @@
 
 //#define DEBUG
 //#define SIGALRM_DEBUG
+//#define PROJ1
 
 #define METRICS
 unsigned int current_time = 0;
@@ -80,13 +81,14 @@ void sigint_handler(int sig) {
 void handle_io_from_child_by_checking_ipc() {
     io_msg msg;
     memset(&msg, 0, sizeof(msg));
-    if((msgrcv(msg_queue_id_sched, &msg, sizeof(io_msg), 0, 0)) != -1) {
+    if((msgrcv(msg_queue_id_sched, &msg, sizeof(io_msg) - sizeof(int), 0, IPC_NOWAIT)) != -1) {
         pid_t pid = msg.pid;
         unsigned int io_time = msg.io_time;
         int is_finished = msg.is_finished;
         int new_cpu_time = msg.new_cpu_burst;
         int new_io_time = msg.new_io_burst;
-
+        printf("[IO Handler] received the msg by child %d, io time = %d, is_finished = %d, new_cpu_time = %d, new_io_t ime = %d\n",
+            msg.pid, msg.io_time, msg.new_cpu_burst, msg.new_io_burst);
 #ifdef DEBUG
         printf("[IO Handler] received the msg by child %d, io time = %d, is_finished = %d, new_cpu_time = %d, new_io_t ime = %d\n",
             msg.pid, msg.io_time, msg.new_cpu_burst, msg.new_io_burst);
@@ -272,16 +274,10 @@ void scheduler_init(pcb_queue* ready_queue) {
     printf("[Tick :: %d] child process starts being scheduled\n", current_time);
 #endif
 
-    initialize_page_manager();
+
 
     if(signal(SIGUSR1, sigint_handler) == SIG_ERR) {
         perror("signal");
-        sigint_handler(SIGINT);
-        exit(1);
-    }
-
-    if(init_msg_queue() == -1) {
-        perror("init_msg_queue");
         sigint_handler(SIGINT);
         exit(1);
     }
@@ -297,6 +293,7 @@ void scheduler_init(pcb_queue* ready_queue) {
 
     setup_timer();
 
+    initialize_page_manager();
 #ifdef DEBUG
     printf("[Tick :: %d] scheduler lunch\n", current_time);
 #endif

@@ -10,12 +10,16 @@
 #include "../pid_queue/pid_queue.h"
 #include "../../entity/child.h"
 #include "../../entity/scheduler.h"
-
+#include "../msg_queue/message_queue.h"
 
 
 // launching process
 void launch_scheduler_and_worker(pcb_queue* ready_queue, int n_process) {
-
+    if(init_msg_queue() == -1) {
+        perror("init_msg_queue");
+        //sigint_handler(SIGINT);
+        exit(1);
+    }
     for(int i = 0; i < n_process; i++) {
         pid_t pid = fork();
 

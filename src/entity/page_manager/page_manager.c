@@ -14,7 +14,9 @@
 #include "../../util/tlb/tlb.h"
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 extern pcb_t* current_process;
 extern u_pt_t* pt_base_register;
 extern pthread_mutex_t ptbr_mutex;
@@ -40,7 +42,7 @@ int initialize_page_manager() {
     }
 
     initialize_tlb(&tlb);
-    init_msg_queue();
+
 
 
     // 스레드 분리
@@ -50,7 +52,9 @@ int initialize_page_manager() {
 
 // 메모리 접근 요청 처리 스레드
 void* handle_memory_request(void* arg) {
+    //sleep(5);
     while (1) {
+        usleep(10000);
         vaddr_t req_msg = {0,};
         printf("[page manager] msg id = %d\n", msg_queue_id_page);
         // 메시지 큐에서 메모리 접근 요청 수신

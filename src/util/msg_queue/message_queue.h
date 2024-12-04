@@ -15,13 +15,13 @@ extern int msg_queue_id_sched;
 extern int msg_queue_id_page;
 
 typedef struct{
-    int msg_t;
+    long msg_t;
     pid_t pid;
     unsigned int io_time;
     int new_io_burst;
     int new_cpu_burst;
     int is_finished;
-}io_msg;
+}__attribute__((packed)) io_msg;
 
 typedef struct {
     long mtype;
@@ -29,7 +29,7 @@ typedef struct {
 }time_alloc_msg;
 
 typedef struct{
-    long msg_t;
+    int msg_t;
     pid_t pid;
     uint16_t vaddr;
 }vaddr_t;
@@ -42,4 +42,5 @@ typedef struct{
 
 int init_msg_queue();
 void close_msg_queue();
+int get_msg_queue_id();
 #endif //MESSGE_QUEUE_H
