@@ -11,64 +11,65 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
+#include "proc/pcb.h"
 #include "ds/pcbq.h"
+#include "ds/iarrq.h"
+#include "ds/ilinkq.h"
 #include "shared/shared.h"
 
 #define TIME_QUANTUM 10
-#define PAGE_COUNT 4096
-#define PAGE_SIZE 256
-#define ENTRY_COUNT 64
-
-extern int msqid;
 extern void run();
 
 int logfd;
-pcbq rqueue;
-pcb cur;
 int ticks;
-
-unsigned int *mem;
-unsigned int *page_list;
-unsigned int page_ptr;
+pcbq schedq;
+pcb cur;
 
 void mem_init()
 {
 	mem = calloc(MEM_SIZE, sizeof(unsigned int));
-	page_list = malloc(PAGE_COUNT * sizeof(unsigned int));
+	swap = calloc(MEM_SIZE, sizeof(unsigned int));
+	iarrq_init(&mpageq, PAGE_COUNT);
+	iarrq_init(&spageq, PAGE_COUNT);
 
 	for (int i = 0; i < PAGE_COUNT; i++)
-		page_list[i] = i;
+	{
+		iarrq_push(&mpageq, i);
+		iarrq_push(&spageq, i);
+	}
+}
+
+unsigned int mem_swap()
+{
+
 }
 
 unsigned int mem_translate(unsigned int vaddr)
 {
-	if (!cur.page_tbl)
-		cur.page_tbl = calloc(ENTRY_COUNT, sizeof(unsigned int*));
-
-	const unsigned int MASK_1 = 0xFC000;
-	const unsigned int MASK_2 = 0x03F00;
-	const unsigned int MASK_OFF = 0x000FF;
-
-	unsigned int off1 = (vaddr & MASK_1) >> 14;
-	unsigned int off2 = (vaddr & MASK_2) >> 8;
-	unsigned int off = (vaddr & MASK_OFF);
+	unsigned int off1 = (vaddr & 0xFC000) >> 14;
+	unsigned int off2 = (vaddr & 0x3F00) >> 8;
+	unsigned int off = (vaddr & 0xFF);
 
 	if (!cur.page_tbl[off1])
 	{
 		cur.page_tbl[off1] = malloc(ENTRY_COUNT * sizeof(unsigned int));
 		memset(cur.page_tbl[off1], 0xFF, ENTRY_COUNT * sizeof(unsigned int));
+		ilinkq_push(&cur.p1entryq, off1);
+
 		dprintf(logfd, "\t\t-> new page table allocated\n");
 	}
 
 	if (cur.page_tbl[off1][off2] == -1)
 	{
-		if (page_ptr == PAGE_COUNT)
+		if (iarrq_empty(&mpageq))
 		{
 			dprintf(logfd, "\t\t-> cannot assign new page frame; not enough memory\n");
 			return -1;
 		}
 
-		cur.page_tbl[off1][off2] = page_list[page_ptr++];
+		cur.page_tbl[off1][off2] = iarrq_pop(&mpageq);
+		ilinkq_push(&cur.p2entryq, (off1 << 6) | off2);
+
 		dprintf(logfd, "\t\t-> new page frame assigned\n");
 	}
 
@@ -108,9 +109,9 @@ void disable_ticks()
 
 void cleanup()
 {
-	while (!pcbq_empty(&rqueue))
+	while (!pcbq_empty(&schedq))
 	{
-		cur = pcbq_pop(&rqueue);
+		cur = pcbq_pop(&schedq);
 		kill(cur.pid, SIGTERM);
 
 		for (int i = 0; i < ENTRY_COUNT; i++)
@@ -120,9 +121,11 @@ void cleanup()
 
 	while (wait(NULL) > 0);
 
-	free(page_list);
 	free(mem);
-	pcbq_destroy(&rqueue);
+	free(swap);
+	iarrq_destroy(&mpageq);
+	iarrq_destroy(&spageq);
+	pcbq_destroy(&schedq);
 	close(logfd);
 	msgctl(msqid, IPC_RMID, NULL);
 
@@ -131,7 +134,7 @@ void cleanup()
 
 void spawn()
 {
-	while (!pcbq_full(&rqueue))
+	while (!pcbq_full(&schedq))
 	{
 		pid_t pid = fork();
 
@@ -142,7 +145,11 @@ void spawn()
 		}
 		
 		if (pid)
-			pcbq_push(&rqueue, (pcb) {pid, NULL});
+		{
+			pcb b;
+			pcb_init(&b, pid);
+			pcbq_push(&schedq, b);
+		}
 		else
 			run();
 	}
@@ -151,13 +158,14 @@ void spawn()
 void schedule()
 {
 	static int remaining = TIME_QUANTUM;
+	static struct msgbuf buf;
+
+	kill(cur.pid, SIGCONT);
+	memset(&buf, 0, sizeof(buf));
+	msgrcv(msqid, &buf, sizeof(buf) - sizeof(long), getpid(), 0);
 
 	dprintf(logfd, "log message at tick %d\n", ticks);
-	dprintf(logfd, "process[%d] gets cpu time\n", cur.pid);
-	kill(cur.pid, SIGCONT);
-
-	struct msgbuf buf;
-	msgrcv(msqid, &buf, sizeof(buf) - sizeof(long), getpid(), 0);
+	dprintf(logfd, "process[%d] gets cpu time, %d remaining\n", cur.pid, buf.burst);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -176,10 +184,13 @@ void schedule()
 			mem_read(addr);
 	}
 
-	if (!--remaining)
+	if (!--buf.burst || !--remaining)
 	{
-		pcbq_push(&rqueue, cur);
-		cur = pcbq_pop(&rqueue);
+		if (!buf.burst)
+			pcb_reset(&cur);
+
+		pcbq_push(&schedq, cur);
+		cur = pcbq_pop(&schedq);
 		remaining = TIME_QUANTUM;
 		dprintf(logfd, "context switched\n");
 	}
@@ -190,7 +201,7 @@ void schedule()
 void loop()
 {
 	// set-up the first running process.
-	cur = pcbq_pop(&rqueue);
+	cur = pcbq_pop(&schedq);
 
 	set_sa_handler(SIGALRM, alarm_handler);
 	enable_ticks();
@@ -204,14 +215,14 @@ void loop()
 	disable_ticks();
 
 	// session has finished; currenly running process is forced back into the queue.
-	pcbq_push(&rqueue, cur);
+	pcbq_push(&schedq, cur);
 }
 
 void setup()
 {
 	msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0666);
 	logfd = creat("log.txt", 0666);
-	pcbq_init(&rqueue, 10);
+	pcbq_init(&schedq, 10);
 }
 
 int main()

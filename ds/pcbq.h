@@ -1,13 +1,7 @@
 #ifndef __PCBQ_H
 #define __PCBQ_H
 
-#include <sys/types.h>
-
-typedef struct pcb
-{
-	pid_t pid;
-	unsigned int **page_tbl;
-} pcb;
+#include "../proc/pcb.h"
 
 typedef struct pcbq
 {
@@ -23,6 +17,5 @@ int pcbq_full(pcbq*);
 void pcbq_push(pcbq*, pcb);
 pcb pcbq_peek(pcbq*);
 pcb pcbq_pop(pcbq*);
-pcb pcbq_at(pcbq*, int);
 
 #endif

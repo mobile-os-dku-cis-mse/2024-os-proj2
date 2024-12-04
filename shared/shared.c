@@ -2,8 +2,13 @@
 #include <signal.h>
 
 #include "shared.h"
+#include "../ds/iarrq.h"
 
 int msqid;
+unsigned int *mem;
+unsigned int *swap;
+iarrq mpageq;
+iarrq spageq;
 
 int set_sa_handler(int signum, void (*handler)(int))
 {

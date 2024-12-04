@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include "../proc/pcb.h"
 #include "pcbq.h"
 
 void pcbq_init(pcbq *q, int cap)
@@ -27,9 +28,9 @@ int pcbq_full(pcbq *q)
 	return q->sz == q->cap;
 }
 
-void pcbq_push(pcbq *q, pcb val)
+void pcbq_push(pcbq *q, pcb b)
 {
-	q->mem[q->back = (q->back+1) % q->cap] = val;
+	q->mem[q->back = (q->back+1) % q->cap] = b;
 	q->sz++;
 }
 
@@ -40,14 +41,9 @@ pcb pcbq_peek(pcbq *q)
 
 pcb pcbq_pop(pcbq *q)
 {
-	pcb val = q->mem[q->front];
+	pcb b = q->mem[q->front];
 	q->front = (q->front+1) % q->cap;
 	q->sz--;
 	
-	return val;
-}
-
-pcb pcbq_at(pcbq *q, int off)
-{
-	return q->mem[(q->front + off) % q->cap];
+	return b;
 }
