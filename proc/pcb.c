@@ -6,9 +6,10 @@
 #include "../ds/iarrq.h"
 #include "../shared/shared.h"
 
-void pcb_init(pcb *b, pid_t pid)
+void pcb_init(pcb *b, pid_t pid, int idx)
 {
 	b->pid = pid;
+	b->idx = idx;
 	b->page_tbl = calloc(ENTRY_COUNT, sizeof(unsigned int*));
 	ilinkq_init(&b->p1entryq);
 	ilinkq_init(&b->p2entryq);

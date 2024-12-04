@@ -8,6 +8,7 @@
 struct pcb
 {
 	pid_t pid;
+	int idx;
 	unsigned int **page_tbl;
 	ilinkq p1entryq;
 	ilinkq p2entryq;
@@ -15,7 +16,7 @@ struct pcb
 
 typedef struct pcb pcb;
 
-void pcb_init(pcb*, pid_t);
+void pcb_init(pcb*, pid_t, int);
 void pcb_reset(pcb*);
 
 #endif

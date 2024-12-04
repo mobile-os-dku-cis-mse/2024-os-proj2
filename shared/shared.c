@@ -7,6 +7,7 @@
 int msqid;
 unsigned int *mem;
 unsigned int *swap;
+unsigned int *pfnmap;
 iarrq mpageq;
 iarrq spageq;
 

@@ -20,6 +20,7 @@ struct msgbuf
 extern int msqid;
 extern unsigned int *mem;
 extern unsigned int *swap;
+extern unsigned int *pfnmap;
 extern iarrq mpageq;
 extern iarrq spageq;
 
