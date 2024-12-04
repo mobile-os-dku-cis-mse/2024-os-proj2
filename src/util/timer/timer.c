@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #define TIMER_INTERVAL 0
-#define TIMER_INTERVAL_USEC 10000
+#define TIMER_INTERVAL_USEC 50000
 
 int setup_timer() {
     struct itimerval timer_value;

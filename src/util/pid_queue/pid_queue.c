@@ -6,6 +6,8 @@
 #include "pid_queue.h"
 //#define DEBUG
 
+pcb_t* global_pcb_ptrs[10];
+
 extern FILE* pcb_logs;
 pcb_t* create_pcb(pid_t pid, int cpu_burst, int priority) {
     pcb_t* new_pcb = (pcb_t*)malloc(sizeof(pcb_t));

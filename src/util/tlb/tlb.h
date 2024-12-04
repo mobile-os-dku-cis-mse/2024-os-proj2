@@ -6,6 +6,7 @@
 #define TLB_H
 
 #include <stdint.h>
+#include <sys/types.h>
 #define TLB_SIZE 16
 
 typedef struct {
@@ -36,7 +37,7 @@ typedef struct {
 #define TLB_MISS -1
 
 void initialize_tlb(tlb_t* tlb);
-int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr);
+int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr, pid_t pid);
 void tlb_add_entry(tlb_t* tlb, uint16_t vaddr, uint32_t frame_number, int read_write, int user_supervisor);
 
 #endif //TLB_H

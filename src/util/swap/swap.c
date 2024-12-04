@@ -8,7 +8,7 @@
 #include <string.h>
 #include "../paging/paging.h"
 #include "../frame_list/frame_list.h"
-
+#include "../pid_queue/pid_queue.h"
 /*
     System Architecture
 
@@ -134,7 +134,7 @@ uint16_t get_vaddr_from_frame(u_pt_t* u_pt, int frame_number) {
 }
 
 // Swap out a page: writes the page to swap and updates the page table
-int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number) {
+int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number, pid_t pid, uint16_t vaddr) {
     // Find the virtual address that maps to the victim frame
     uint16_t victim_vaddr = get_vaddr_from_frame(u_pt, victim_frame_number);
     if (victim_vaddr == 0xFFFF) {
@@ -166,7 +166,7 @@ int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number) {
     l_pte->present = 0;
     l_pte->swapped = 1;
     l_pte->swap_offset = slot;
-
+    l_pte->frame_number = -1;
     // Free the physical frame
     free_frame(victim_frame_number);
 
@@ -175,7 +175,7 @@ int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number) {
     return SWAP_SUCCESS;
 }
 // Swap in a page: reads the page from swap and updates the page table
-int swap_in_page(u_pt_t* u_pt, uint16_t vaddr) {
+int swap_in_page(u_pt_t* u_pt, uint16_t vaddr, pid_t pid) {
     uint8_t upper_index = vaddr >> 12;
     uint8_t lower_index = (vaddr >> 8) & 0xF;
     l_pte_t* l_pte = &u_pt->entries[upper_index].lower_table->entries[lower_index];
@@ -186,7 +186,7 @@ int swap_in_page(u_pt_t* u_pt, uint16_t vaddr) {
     }
 
     // Allocate a physical frame
-    int frame_number = allocate_frame();
+    int frame_number = allocate_frame(pid, vaddr);
     if (frame_number == -1) {
         // No free frames, need to swap out a victim page
         int victim_frame = select_victim_frame();
@@ -195,14 +195,22 @@ int swap_in_page(u_pt_t* u_pt, uint16_t vaddr) {
             return SWAP_FAIL;
         }
 
+        pid_t victim_pid = get_pid_from_frame(victim_frame);
+        u_pt_t* vic_u_pt = NULL;
+        for (int i = 0; i < 10; i++) {
+            if (victim_pid == global_pcb_ptrs[i]->pid) {
+                vic_u_pt = global_pcb_ptrs[i]->page_table;
+            }
+        }
+
         // Swap out the victim frame
-        if (swap_out_page(u_pt, victim_frame) != SWAP_SUCCESS) {
+        if (swap_out_page(vic_u_pt, victim_frame, victim_pid, vaddr) != SWAP_SUCCESS) {
             fprintf(stderr, "Failed to swap out victim frame %d\n", victim_frame);
             return SWAP_FAIL;
         }
 
         // Now allocate the freed frame
-        frame_number = allocate_frame();
+        frame_number = allocate_frame(pid, vaddr);
         if (frame_number == -1) {
             fprintf(stderr, "Failed to allocate frame after swapping out victim.\n");
             return SWAP_FAIL;

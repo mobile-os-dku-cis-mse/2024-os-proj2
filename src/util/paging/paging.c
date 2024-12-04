@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "../frame_list/frame_list.h"
 #include "../swap/swap.h"
+#include "../pid_queue/pid_queue.h"
 /*
     System Architecture
 
@@ -29,6 +30,8 @@
     - 256B page size
 
 */
+
+extern pcb_t* global_pcb_ptrs[10];
 
 u_pt_t* create_u_pt(void){
   u_pt_t* u_pt = (u_pt_t*)malloc(sizeof(u_pt_t));
@@ -76,7 +79,7 @@ void free_page_table(u_pt_t* u_pt){
   free(u_pt);
 }
 
-int map_page(u_pt_t* u_pt, uint16_t vaddr){
+int map_page(u_pt_t* u_pt, uint16_t vaddr, pid_t pid){
   uint8_t upper_index = vaddr >> 12;
   uint8_t lower_index = (vaddr >> 8) & 0xF;
 
@@ -90,7 +93,7 @@ int map_page(u_pt_t* u_pt, uint16_t vaddr){
     return 0;
   }
 
-  int frame_num = allocate_frame();
+  int frame_num = allocate_frame(pid, vaddr);
   if(frame_num == -1){
     // victim frame selection
     // LRU used
@@ -100,14 +103,22 @@ int map_page(u_pt_t* u_pt, uint16_t vaddr){
       return -1;
     }
 
+    pid_t victim_pid = get_pid_from_frame(victim_frame);
+    u_pt_t* vic_u_pt = NULL;
+    for (int i = 0; i < 10; i++) {
+      if (victim_pid == global_pcb_ptrs[i]->pid) {
+        vic_u_pt = global_pcb_ptrs[i]->page_table;
+      }
+    }
+
     // victim frame eviction
     printf("Victim frame: %d\n", victim_frame);
-    if(swap_out_page(u_pt, victim_frame) != SWAP_SUCCESS){
+    if(swap_out_page(vic_u_pt, victim_frame, victim_pid, vaddr) != SWAP_SUCCESS){
       perror("Failed to swap out page");
       return -1;
     }
 
-    frame_num = allocate_frame();
+    frame_num = allocate_frame(pid, vaddr);
     if(frame_num == -1){ 
       perror("Failed to allocate frame after swapping out victim");
       return -1;
@@ -153,9 +164,9 @@ void unmap_page(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr){
 
  */
 
-int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr){
+int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr, pid_t pid){
   // TLB lookup - Cache Hit
-  if(tlb_lookup(tlb, vaddr, paddr) == TLB_HIT) {
+  if(tlb_lookup(tlb, vaddr, paddr, pid) == TLB_HIT) {
     int frame_number = *paddr >> 8;
     free_page_list[frame_number].last_used = get_currrent_time();
     return TLB_HIT_PAGING;
@@ -181,11 +192,11 @@ int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr)
   if (!l_pte->present) {
     if (l_pte->swapped) {
       // page swapp in
-      if (swap_in_page(u_pt, vaddr) != SWAP_SUCCESS) {
+      if (swap_in_page(u_pt, vaddr, pid) != SWAP_SUCCESS) {
         return -1;
       }
     } else {
-      if (map_page(u_pt, vaddr) != 0) {
+      if (map_page(u_pt, vaddr, pid) != 0) {
         return -1;
       }
     }

@@ -33,16 +33,6 @@ int init_msg_queue() {
         return -1;
     }
 
-
-    // 큐가 비어있는지 확인하기 위한 디버그 출력
-    struct msqid_ds buf;
-    if (msgctl(msg_queue_id_sched, IPC_STAT, &buf) != -1) {
-        printf("[Init] Scheduler queue - messages: %lu\n", buf.msg_qnum);
-    }
-    if (msgctl(msg_queue_id_page, IPC_STAT, &buf) != -1) {
-        printf("[Init] Page queue - messages: %lu\n", buf.msg_qnum);
-    }
-
     return 0;
 }
 

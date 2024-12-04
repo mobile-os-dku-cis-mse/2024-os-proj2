@@ -4,6 +4,11 @@
 
 #include "tlb.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "src/util/frame_list/frame_list.h"
+
 /*
     System Architecture
 
@@ -25,16 +30,45 @@
     - 256B page size
 
 */
+FILE* log_file_tlb;
+
+void init_log_file() {
+    log_file_tlb = fopen("tlb_cache_hit_log.csv", "w");
+    if (log_file_tlb == NULL) {
+        perror("Failed to open log file");
+        exit(EXIT_FAILURE);
+    }
+    // CSV 헤더 작성
+    fprintf(log_file_tlb, "timestamp,pid,vaddr,paddr\n");
+    fflush(log_file_tlb);
+}
+
+void log_tlb_access(int pid, uint16_t vaddr, uint32_t paddr, int tlb_hit) {
+    if (log_file_tlb == NULL) {
+        // 로그 파일이 열려 있지 않으면 열기 시도
+        log_file_tlb = fopen("tlb_access.csv", "w");
+        if (log_file_tlb == NULL) {
+            perror("Failed to open log file");
+            return;
+        }
+    }
+
+    // 로그 작성
+    fprintf(log_file_tlb, "%u,%d,0x%04X,0x%08X,%d\n",
+            check_current_time(), pid, vaddr, paddr, tlb_hit);
+    fflush(log_file_tlb);
+}
 
 
 void initialize_tlb(tlb_t* tlb) {
+    init_log_file();
     for (int i = 0; i < TLB_SIZE; i++) {
         tlb->entries[i].valid = 0;
     }
     tlb->next_replace_index = 0;
 }
 
-int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr) {
+int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr, pid_t pid) {
     uint8_t upper_index = (vaddr >> 12) & 0xF;
     uint8_t lower_index = (vaddr >> 8) & 0xF;
     uint8_t offset = vaddr & 0xFF;
@@ -46,9 +80,11 @@ int tlb_lookup(tlb_t* tlb, uint16_t vaddr, uint32_t* paddr) {
 
             tlb->entries[i].timestamp = tlb->current_time++;
             tlb->entries[i].sca = 1;
+            log_tlb_access(pid, vaddr, *paddr, TLB_HIT);
             return TLB_HIT;
         }
     }
+    log_tlb_access(pid, vaddr, *paddr, TLB_MISS);
     return TLB_MISS;
 }
 

@@ -25,6 +25,6 @@ int init_swap_space();
 int allocate_swap_slot();
 void close_swap_space();
 void free_swap_slot(uint32_t slot);
-int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number);
-int swap_in_page(u_pt_t* u_pt, uint16_t vaddr);
+int swap_out_page(u_pt_t* u_pt, uint32_t victim_frame_number, pid_t pid, uint16_t vaddr);
+int swap_in_page(u_pt_t* u_pt, uint16_t vaddr, pid_t pid);
 #endif //SWAP_H

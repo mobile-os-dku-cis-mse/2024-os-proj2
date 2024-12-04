@@ -14,6 +14,8 @@
 #define TIME_QUANTUAM 5
 #endif
 
+
+
 // PCB(Process Control Block) 구조체
 typedef struct _PCB {
     pid_t pid;              // 프로세스 ID
@@ -43,6 +45,8 @@ typedef struct {
     pcb_t* rear;
     int size;
 } pcb_queue;
+
+extern pcb_t* global_pcb_ptrs[10];
 
 // Queue operations
 pcb_queue* create_pcb_queue();

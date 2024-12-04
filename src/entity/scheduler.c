@@ -17,6 +17,8 @@
 #include "../util/msg_queue/message_queue.h"
 #include <pthread.h>
 #include "page_manager/page_manager.h"
+#include "src/util/frame_list/frame_list.h"
+#include "src/util/swap/swap.h"
 
 //#define DEBUG
 //#define SIGALRM_DEBUG
@@ -87,8 +89,6 @@ void handle_io_from_child_by_checking_ipc() {
         int is_finished = msg.is_finished;
         int new_cpu_time = msg.new_cpu_burst;
         int new_io_time = msg.new_io_burst;
-        printf("[IO Handler] received the msg by child %d, io time = %d, is_finished = %d, new_cpu_time = %d, new_io_t ime = %d\n",
-            msg.pid, msg.io_time, msg.new_cpu_burst, msg.new_io_burst);
 #ifdef DEBUG
         printf("[IO Handler] received the msg by child %d, io time = %d, is_finished = %d, new_cpu_time = %d, new_io_t ime = %d\n",
             msg.pid, msg.io_time, msg.new_cpu_burst, msg.new_io_burst);
@@ -274,6 +274,8 @@ void scheduler_init(pcb_queue* ready_queue) {
     printf("[Tick :: %d] child process starts being scheduled\n", current_time);
 #endif
 
+    init_physical_memory();
+    init_swap_space();
 
 
     if(signal(SIGUSR1, sigint_handler) == SIG_ERR) {

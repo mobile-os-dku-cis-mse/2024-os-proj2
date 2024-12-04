@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include "../tlb/tlb.h"
+#include <sys/types.h>
 #define PAGE_SIZE 256
 #define PAGE_OFFSET_BITS 8
 #define LOWER_INDEX_BITS 4
@@ -46,9 +47,9 @@ typedef struct{
 
 u_pt_t* create_u_pt(void);
 l_pt_t* create_l_pt(void);
-int map_page(u_pt_t* u_pt, uint16_t vaddr);
+int map_page(u_pt_t* u_pt, uint16_t vaddr, pid_t pid);
 void unmap_page(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr);
-int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr);
+int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr, pid_t pid);
 void free_page_table(u_pt_t* u_pt);
 
 #endif //PAGING_H
