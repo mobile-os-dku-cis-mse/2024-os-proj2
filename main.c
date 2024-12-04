@@ -34,7 +34,7 @@ unsigned int page_ptr;
 void mem_init()
 {
 	mem = calloc(MEM_SIZE, sizeof(unsigned int));
-	page_list = calloc(PAGE_COUNT, sizeof(unsigned int));
+	page_list = malloc(PAGE_COUNT * sizeof(unsigned int));
 
 	for (int i = 0; i < PAGE_COUNT; i++)
 		page_list[i] = i;
@@ -62,7 +62,7 @@ unsigned int mem_translate(unsigned int vaddr)
 
 	if (cur.page_tbl[off1][off2] == -1)
 	{
-		if (page_ptr == PAGE_SIZE)
+		if (page_ptr == PAGE_COUNT)
 		{
 			dprintf(logfd, "\t\t-> cannot assign new page frame; not enough memory\n");
 			return -1;
