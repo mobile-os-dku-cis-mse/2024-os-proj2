@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../frame_list/frame_list.h"
-
+#include "../swap/swap.h"
 /*
     System Architecture
 
@@ -56,8 +56,24 @@ l_pt_t* create_l_pt(void){
     l_pt->entries[i].read_write = 0;
     l_pt->entries[i].user_supervisor = 0;
     l_pt->entries[i].frame_number = 0;
+    l_pt->entries[i].swapped = 0;
+    l_pt->entries[i].swap_offset = 0;
   }
   return l_pt;
+}
+
+void free_page_table(u_pt_t* u_pt){
+  if(u_pt == NULL) return;
+
+  for(int i = 0; i < NUM_UPPER_ENTRIES; i++){
+    u_pte_t* u_pte = &u_pt->entries[i];
+    if(u_pte->present && u_pte->lower_table != NULL){
+      free(u_pte->lower_table);
+      u_pte->lower_table = NULL;
+      u_pte->present = 0;
+    }
+  }
+  free(u_pt);
 }
 
 int map_page(u_pt_t* u_pt, uint16_t vaddr){
@@ -70,10 +86,32 @@ int map_page(u_pt_t* u_pt, uint16_t vaddr){
   }
 
   l_pt_t* l_pt = u_pt->entries[upper_index].lower_table;
+  if(l_pt->entries[lower_index].present){
+    return 0;
+  }
 
-  int frame_num = allocate_page();
+  int frame_num = allocate_frame();
   if(frame_num == -1){
-    return -1;
+    // victim frame selection
+    // LRU used
+    int victim_frame = select_victim_frame();
+    if(victim_frame == -1){
+      perror("Failed to select victim frame");
+      return -1;
+    }
+
+    // victim frame eviction
+    printf("Victim frame: %d\n", victim_frame);
+    if(swap_out_page(u_pt, victim_frame) != SWAP_SUCCESS){
+      perror("Failed to swap out page");
+      return -1;
+    }
+
+    frame_num = allocate_frame();
+    if(frame_num == -1){ 
+      perror("Failed to allocate frame after swapping out victim");
+      return -1;
+    }
   }
 
   l_pt->entries[lower_index].frame_number = frame_num;
@@ -111,12 +149,17 @@ void unmap_page(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr){
   TLB Miss and Paging = 1
   Page Fault = -1
 
+  SWAP_IN_PAGE_FAULT = -2
+
  */
 
 int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr){
   // TLB lookup - Cache Hit
-  if(tlb_lookup(tlb, vaddr, paddr) == TLB_HIT) return TLB_HIT_PAGING;
-
+  if(tlb_lookup(tlb, vaddr, paddr) == TLB_HIT) {
+    int frame_number = *paddr >> 8;
+    free_page_list[frame_number].last_used = get_currrent_time();
+    return TLB_HIT_PAGING;
+  }
   // Pagining Table lookup - Cache Miss
   uint8_t upper_index = (vaddr >> 12) & 0xF;
   uint8_t lower_index = (vaddr >> 8) & 0xF;
@@ -125,31 +168,35 @@ int translate_address(u_pt_t* u_pt, tlb_t* tlb, uint16_t vaddr, uint32_t* paddr)
   u_pte_t* u_pte = &u_pt->entries[upper_index];
 
   if(!u_pte->present){
-    return PAGE_FAULT;
+    u_pte->lower_table = create_l_pt();
+    if (u_pte->lower_table == NULL) {
+      return -1;
+    }
+    u_pte->present = 1;
   }
 
   l_pt_t* l_pt = u_pte->lower_table;
   l_pte_t* l_pte = &l_pt->entries[lower_index];
 
-  if(!l_pte->present){
-    return PAGE_FAULT;
+  if (!l_pte->present) {
+    if (l_pte->swapped) {
+      // page swapp in
+      if (swap_in_page(u_pt, vaddr) != SWAP_SUCCESS) {
+        return -1;
+      }
+    } else {
+      if (map_page(u_pt, vaddr) != 0) {
+        return -1;
+      }
+    }
+    l_pte = &l_pt->entries[lower_index];
   }
 
   *paddr = (l_pte->frame_number << 8) + offset;
   tlb_add_entry(tlb, vaddr, l_pte->frame_number, l_pte->read_write, l_pte->user_supervisor);
+
+  free_page_list[l_pte->frame_number].last_used = get_currrent_time();
+
   return TLB_MISS_PAGING;
 }
 
-void free_page_table(u_pt_t* u_pt){
-  if(u_pt == NULL) return;
-
-  for(int i = 0; i < NUM_UPPER_ENTRIES; i++){
-    u_pte_t* u_pte = &u_pt->entries[i];
-    if(u_pte->present && u_pte->lower_table != NULL){
-      free(u_pte->lower_table);
-      u_pte->lower_table = NULL;
-      u_pte->present = 0;
-    }
-  }
-  free(u_pt);
-}

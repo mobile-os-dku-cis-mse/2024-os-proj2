@@ -251,6 +251,177 @@ build paging_test2: C_EXECUTABLE_LINKER__paging_test2_Debug CMakeFiles/paging_te
   TARGET_FILE = paging_test2
   TARGET_PDB = paging_test2.dbg
 
+# =============================================================================
+# Object build statements for EXECUTABLE target frame_list_test
+
+
+#############################################
+# Order-only phony target for frame_list_test
+
+build cmake_object_order_depends_target_frame_list_test: phony || .
+
+build CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list.c.o: C_COMPILER__frame_list_test_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/frame_list/frame_list.c || cmake_object_order_depends_target_frame_list_test
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/frame_list_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/frame_list_test.dir/src/util/frame_list
+
+build CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list_test.c.o: C_COMPILER__frame_list_test_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/frame_list/frame_list_test.c || cmake_object_order_depends_target_frame_list_test
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list_test.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/frame_list_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/frame_list_test.dir/src/util/frame_list
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target frame_list_test
+
+
+#############################################
+# Link the executable frame_list_test
+
+build frame_list_test: C_EXECUTABLE_LINKER__frame_list_test_Debug CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list.c.o CMakeFiles/frame_list_test.dir/src/util/frame_list/frame_list_test.c.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/frame_list_test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = frame_list_test
+  TARGET_PDB = frame_list_test.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target paging_test3
+
+
+#############################################
+# Order-only phony target for paging_test3
+
+build cmake_object_order_depends_target_paging_test3: phony || .
+
+build CMakeFiles/paging_test3.dir/src/util/paging/test/paging_test3.c.o: C_COMPILER__paging_test3_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/paging/test/paging_test3.c || cmake_object_order_depends_target_paging_test3
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test3.dir/src/util/paging/test/paging_test3.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test3.dir/src/util/paging/test
+
+build CMakeFiles/paging_test3.dir/src/util/tlb/tlb.c.o: C_COMPILER__paging_test3_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/tlb/tlb.c || cmake_object_order_depends_target_paging_test3
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test3.dir/src/util/tlb/tlb.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test3.dir/src/util/tlb
+
+build CMakeFiles/paging_test3.dir/src/util/frame_list/frame_list.c.o: C_COMPILER__paging_test3_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/frame_list/frame_list.c || cmake_object_order_depends_target_paging_test3
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test3.dir/src/util/frame_list/frame_list.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test3.dir/src/util/frame_list
+
+build CMakeFiles/paging_test3.dir/src/util/paging/paging.c.o: C_COMPILER__paging_test3_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/paging/paging.c || cmake_object_order_depends_target_paging_test3
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test3.dir/src/util/paging/paging.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test3.dir/src/util/paging
+
+build CMakeFiles/paging_test3.dir/src/util/swap/swap.c.o: C_COMPILER__paging_test3_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/swap/swap.c || cmake_object_order_depends_target_paging_test3
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test3.dir/src/util/swap/swap.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test3.dir/src/util/swap
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target paging_test3
+
+
+#############################################
+# Link the executable paging_test3
+
+build paging_test3: C_EXECUTABLE_LINKER__paging_test3_Debug CMakeFiles/paging_test3.dir/src/util/paging/test/paging_test3.c.o CMakeFiles/paging_test3.dir/src/util/tlb/tlb.c.o CMakeFiles/paging_test3.dir/src/util/frame_list/frame_list.c.o CMakeFiles/paging_test3.dir/src/util/paging/paging.c.o CMakeFiles/paging_test3.dir/src/util/swap/swap.c.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/paging_test3.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = paging_test3
+  TARGET_PDB = paging_test3.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target paging_test4
+
+
+#############################################
+# Order-only phony target for paging_test4
+
+build cmake_object_order_depends_target_paging_test4: phony || .
+
+build CMakeFiles/paging_test4.dir/src/util/paging/test/paging_test4.c.o: C_COMPILER__paging_test4_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/paging/test/paging_test4.c || cmake_object_order_depends_target_paging_test4
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test4.dir/src/util/paging/test/paging_test4.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test4.dir/src/util/paging/test
+
+build CMakeFiles/paging_test4.dir/src/util/tlb/tlb.c.o: C_COMPILER__paging_test4_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/tlb/tlb.c || cmake_object_order_depends_target_paging_test4
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test4.dir/src/util/tlb/tlb.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test4.dir/src/util/tlb
+
+build CMakeFiles/paging_test4.dir/src/util/frame_list/frame_list.c.o: C_COMPILER__paging_test4_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/frame_list/frame_list.c || cmake_object_order_depends_target_paging_test4
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test4.dir/src/util/frame_list/frame_list.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test4.dir/src/util/frame_list
+
+build CMakeFiles/paging_test4.dir/src/util/paging/paging.c.o: C_COMPILER__paging_test4_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/paging/paging.c || cmake_object_order_depends_target_paging_test4
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test4.dir/src/util/paging/paging.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test4.dir/src/util/paging
+
+build CMakeFiles/paging_test4.dir/src/util/swap/swap.c.o: C_COMPILER__paging_test4_unscanned_Debug /home/hochacha/os_hw/2024-os-proj2/src/util/swap/swap.c || cmake_object_order_depends_target_paging_test4
+  DEFINES = -DPROJ2
+  DEP_FILE = CMakeFiles/paging_test4.dir/src/util/swap/swap.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/hochacha/os_hw/2024-os-proj2/.
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  OBJECT_FILE_DIR = CMakeFiles/paging_test4.dir/src/util/swap
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target paging_test4
+
+
+#############################################
+# Link the executable paging_test4
+
+build paging_test4: C_EXECUTABLE_LINKER__paging_test4_Debug CMakeFiles/paging_test4.dir/src/util/paging/test/paging_test4.c.o CMakeFiles/paging_test4.dir/src/util/tlb/tlb.c.o CMakeFiles/paging_test4.dir/src/util/frame_list/frame_list.c.o CMakeFiles/paging_test4.dir/src/util/paging/paging.c.o CMakeFiles/paging_test4.dir/src/util/swap/swap.c.o
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/paging_test4.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = paging_test4
+  TARGET_PDB = paging_test4.dbg
+
 
 #############################################
 # Utility command for edit_cache
@@ -285,7 +456,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug
 
-build all: phony scheduler paging_test paging_test2
+build all: phony scheduler paging_test paging_test2 frame_list_test paging_test3 paging_test4
 
 # =============================================================================
 # Built-in targets

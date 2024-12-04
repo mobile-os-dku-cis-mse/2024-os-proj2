@@ -1,5 +1,8 @@
 /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/scheduler.dir
 /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/paging_test.dir
 /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/paging_test2.dir
+/home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/frame_list_test.dir
+/home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/paging_test3.dir
+/home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/paging_test4.dir
 /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/hochacha/os_hw/2024-os-proj2/cmake-build-debug/CMakeFiles/rebuild_cache.dir

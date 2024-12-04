@@ -18,6 +18,7 @@
 #define TLB_HIT_PAGING 2
 #define TLB_MISS_PAGING 1
 #define PAGE_FAULT (-1)
+#define SWAP_IN_PAGE_FAULT (-2)
 
 typedef struct{
   uint32_t frame_number;
@@ -25,7 +26,7 @@ typedef struct{
   int present;
   int read_write;
   int user_supervisor;
-
+  int dirty;
   int swapped; // 1: swapped, 0: not swapped
   uint32_t swap_offset;
 } l_pte_t;
