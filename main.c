@@ -173,13 +173,14 @@ void cleanup()
 	for (int i = 0; i < PROCESS_COUNT; i++)
 	{
 		kill(proc_arr[i].pid, SIGTERM);
-		pcb_reset(&proc_arr[i]);
+		pcb_destroy(&proc_arr[i]);
 	}
 
 	while (wait(NULL) > 0);
 
 	free(mem);
 	free(swap);
+	free(pfnmap);
 	iarrq_destroy(&mpageq);
 	iarrq_destroy(&spageq);
 	close(logfd);

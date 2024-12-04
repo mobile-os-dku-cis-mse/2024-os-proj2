@@ -18,5 +18,6 @@ typedef struct pcb pcb;
 
 void pcb_init(pcb*, pid_t, int);
 void pcb_reset(pcb*);
+void pcb_destroy(pcb*);
 
 #endif

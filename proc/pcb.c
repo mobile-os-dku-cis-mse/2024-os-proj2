@@ -38,3 +38,9 @@ void pcb_reset(pcb *b)
 		b->page_tbl[off1] = NULL;
 	}
 }
+
+void pcb_destroy(pcb *b)
+{
+	pcb_reset(b);
+	free(b->page_tbl);
+}
