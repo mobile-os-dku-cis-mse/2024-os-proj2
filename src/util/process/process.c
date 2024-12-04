@@ -7,9 +7,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "pid_queue.h"
-#include "../entity/child.h"
-#include "../entity/scheduler.h"
+#include "../pid_queue/pid_queue.h"
+#include "../../entity/child.h"
+#include "../../entity/scheduler.h"
 
 
 

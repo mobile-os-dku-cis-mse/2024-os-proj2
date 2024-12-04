@@ -11,6 +11,7 @@
 		"commands" : 
 		[
 			"add_executable",
+			"target_link_libraries",
 			"add_definitions",
 			"include_directories"
 		],
@@ -32,11 +33,17 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 7,
+				"line" : 78,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
+				"file" : 0,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
 				"file" : 0,
 				"line" : 6,
 				"parent" : 0
@@ -55,14 +62,14 @@
 			"defines" : 
 			[
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"define" : "PROJ2"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 3,
+					"backtrace" : 4,
 					"path" : "/home/hochacha/os_hw/2024-os-proj2/."
 				}
 			],
@@ -85,7 +92,11 @@
 				8,
 				10,
 				12,
-				14
+				14,
+				16,
+				18,
+				20,
+				22
 			]
 		}
 	],
@@ -101,6 +112,11 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lm",
+				"role" : "libraries"
 			}
 		],
 		"language" : "C"
@@ -126,7 +142,11 @@
 				8,
 				10,
 				12,
-				14
+				14,
+				16,
+				18,
+				20,
+				22
 			]
 		},
 		{
@@ -139,7 +159,11 @@
 				9,
 				11,
 				13,
-				15
+				15,
+				17,
+				19,
+				21,
+				23
 			]
 		}
 	],
@@ -160,17 +184,6 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/util/process/process.c",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "src/util/process/process.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
 			"path" : "src/entity/child.c",
 			"sourceGroupIndex" : 0
 		},
@@ -182,23 +195,23 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/util/pid_queue/pid_queue.c",
+			"path" : "src/entity/page_manager/page_manager.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/util/pid_queue/pid_queue.h",
+			"path" : "src/entity/page_manager/page_manager.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/util/timer/timer.c",
+			"path" : "src/util/frame_list/frame_list.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/util/timer/timer.h",
+			"path" : "src/util/frame_list/frame_list.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -215,23 +228,78 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/entity/page_manager.c",
+			"path" : "src/util/paging/paging.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/entity/page_manager.h",
+			"path" : "src/util/paging/paging.h",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/util/shared_memory/shared_memory.c",
+			"path" : "src/util/pid_queue/pid_queue.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/util/shared_memory/shared_memory.h",
+			"path" : "src/util/pid_queue/pid_queue.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/util/process/process.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/util/process/process.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/util/random/random.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/util/random/random.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/util/swap/swap.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/util/swap/swap.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/util/timer/timer.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/util/timer/timer.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/util/tlb/tlb.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/util/tlb/tlb.h",
 			"sourceGroupIndex" : 1
 		}
 	],

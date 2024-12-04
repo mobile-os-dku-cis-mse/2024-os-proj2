@@ -5,11 +5,11 @@
 #include <unistd.h>
 
 #include "entity/scheduler.h"
-#include "util/process.h"
+#include "util/process/process.h"
 FILE* IO_result;
 FILE* pcb_logs;
 FILE* mem_access;
-#include "util/shared_memory.h"
+
 // shared memory p_mem declared
 
 int main(int argc, char * arg[])
@@ -19,13 +19,11 @@ int main(int argc, char * arg[])
 #ifdef PROJ1
 	IO_result = freopen("scheduler_dump.txt", "w", stdout);
 #elif PROJ2
-
 	mem_access = fopen("memory_access_pattern.txt", "w");
 #endif
 	pcb_logs = fopen("Finished_PCB.txt", "w");
 	launch_scheduler_and_worker(ready_queue_o, n_process);
 
-	p_mem = init_shared_memory();
 
 	scheduler_run(ready_queue_o, 10);
 	return 0;

@@ -29,15 +29,16 @@ typedef struct {
 }time_alloc_msg;
 
 typedef struct{
-    int msg_t;
+    long msg_t;
     pid_t pid;
-    unsigned int access_mem;
+    uint16_t vaddr;
 }vaddr_t;
 
-typedef struct{
-    int msg_t;
+typedef struct{ 
+    int msg_t; 
     pid_t pid;
-}paddr_t;
+    uint8_t buf;
+}access_res_t;
 
 int init_msg_queue();
 void close_msg_queue();

@@ -12,8 +12,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/msg.h>
-
-#include "src/util/message_queue.h"
+#include <stdint.h>
+#include "src/util/msg_queue/message_queue.h"
+#include "../util/random/random.h"
 
 //#define DEBUG
 int cpu_burst = 0;  // 한 프로그램이 실행되는데 필요한 CPU 시간
@@ -65,8 +66,8 @@ void child_SIGALRM(int sig) {
         printf("[Child::%d] CPU burst completed. Requesting IO.\n", getpid());
 #endif
         process_state = PROCESS_BLOCKED;
-        int new_cpu_burst = rand() % 20 + 1;
-        int new_io_burst = rand() % 20 + 1;
+        int new_cpu_burst = 5;
+        int new_io_burst = 5;
 
         request_io_msgsnd(io_burst, new_cpu_burst, new_io_burst);
         total_exec_time += io_burst;
@@ -113,8 +114,8 @@ void init_child() {
         exit(1);
     }
     srand(time(NULL));
-    cpu_burst = rand() % 10 + 1;
-    io_burst = rand() % 10 + 1;
+    cpu_burst = 5;
+    io_burst = 5;
 
 #ifdef PROJ1
     printf("[Child::%d] cpu_burst = %d, io_burst = %d\n", getpid(),cpu_burst, io_burst);
@@ -134,40 +135,47 @@ void init_child() {
     }
 }
 
-void vaddr_access(int vaddr) {
-    vaddr_t msg ={0,};
-    msg.msg_t = MESSAGE_TYPE_VADDR_ACCESS;
-    msg.pid = getpid();
-    msg.access_mem = vaddr;
-
-    if(msgsnd(msg_queue_id_page, &msg, sizeof(vaddr_t), IPC_NOWAIT) == -1) {
-        perror("child_msgsnd");
-        exit(EXIT_FAILURE);
-    }
-
-    /*
-
-     */
-    if (msgget(msg_queue_id_page, &msg)) {
-
-    }
-}
 
 int child_main(int argc, char **argv) {
     init_child();
 #ifdef DEBUG
     printf("[Child::%d] ready to run\n", getpid());
 #endif
+    int has_sent_mem_access = 0;
     while(!EOP) {
-        if (process_state == PROCESS_RUNNING) {
 
+        if (process_state == PROCESS_RUNNING && !has_sent_mem_access) {
+            printf("[CHILD::%d] Start Mem access", getpid());
             fprintf(mem_access, "print out: %d\n", getpid());
             fflush(mem_access);     // printf 시에는 반드시 fflush로 버퍼 비워줄 것
 
-            for (int i = 0; i < 10; i++) {
+            // send vaddr access 10 times
+            for (int i = 0; i < 10 && process_state == PROCESS_RUNNING; i++) {
+                vaddr_t msg;
+                msg.msg_t = 3;
+                msg.pid = getpid();
+                msg.vaddr = generate_uniform_vaddr();
 
+                fprintf(stderr, "[Child::%d]msg_id = %d, msg_t = %d, PID = %d, Vaddr = 0x%04x\n",
+                                                     getpid(), msg_queue_id_page, msg.msg_t, msg.pid, msg.vaddr);
+
+                if (msgsnd(msg_queue_id_page, &msg, sizeof(vaddr_t) - sizeof(long), IPC_NOWAIT) == -1) {
+                    if (errno == EAGAIN) {
+                        fprintf(stderr, "[Child::%d]Message queue is full. Retrying...\n",getpid());
+                        usleep(500000); // 100ms 대기
+                        i--; // 다시 시도
+                        continue;
+                    } else {
+                        perror("child_msgsnd");
+                        exit(EXIT_FAILURE);
+                    }
+                }
             }
+            has_sent_mem_access = 1;
+        } else {
+            has_sent_mem_access = 0;
         }
-        usleep(100);
+
+        usleep(10000);
     }
 }

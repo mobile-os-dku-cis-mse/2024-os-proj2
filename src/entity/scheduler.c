@@ -15,14 +15,21 @@
 #include "../util/timer/timer.h"
 #include "../util/pid_queue/pid_queue.h"
 #include "../util/msg_queue/message_queue.h"
+#include <pthread.h>
+#include "page_manager/page_manager.h"
 
 //#define DEBUG
 //#define SIGALRM_DEBUG
+
 #define METRICS
 unsigned int current_time = 0;
 pcb_queue* ready_queue_schd = NULL;
 pcb_queue* waiting_queue_schd = NULL;
 pcb_t* current_process = NULL;
+u_pt_t* pt_base_register = NULL;
+pthread_mutex_t ptbr_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
 
 volatile sig_atomic_t io_request_received = 0;
 extern FILE* IO_result;
@@ -73,12 +80,13 @@ void sigint_handler(int sig) {
 void handle_io_from_child_by_checking_ipc() {
     io_msg msg;
     memset(&msg, 0, sizeof(msg));
-    if((msgrcv(msg_queue_id_sched, &msg, sizeof(io_msg), 0, IPC_NOWAIT)) != -1) {
+    if((msgrcv(msg_queue_id_sched, &msg, sizeof(io_msg), 0, 0)) != -1) {
         pid_t pid = msg.pid;
         unsigned int io_time = msg.io_time;
         int is_finished = msg.is_finished;
         int new_cpu_time = msg.new_cpu_burst;
         int new_io_time = msg.new_io_burst;
+
 #ifdef DEBUG
         printf("[IO Handler] received the msg by child %d, io time = %d, is_finished = %d, new_cpu_time = %d, new_io_t ime = %d\n",
             msg.pid, msg.io_time, msg.new_cpu_burst, msg.new_io_burst);
@@ -191,6 +199,9 @@ void alarm_handler(int sig) {
             enqueue_pcb(ready_queue_schd, current_process);
 
             current_process = dequeue_pcb(ready_queue_schd, "Time out schedule out");
+            pthread_mutex_lock(&ptbr_mutex);
+            pt_base_register = current_process->page_table;
+            pthread_mutex_unlock(&ptbr_mutex);
 #ifdef METRICS
             if (current_process->start_time == 0) {
                 current_process->start_time = current_time;
@@ -216,6 +227,9 @@ void alarm_handler(int sig) {
             printf("6\n");
 #endif
             current_process = dequeue_pcb(ready_queue_schd, "No current process");
+            pthread_mutex_lock(&ptbr_mutex);
+            pt_base_register = current_process->page_table;
+            pthread_mutex_unlock(&ptbr_mutex);
             current_process->state = PROCESS_RUNNING;
             current_process->remaining_time = TIME_QUANTUAM;
             kill(current_process->pid, SIGUSR1);
@@ -258,6 +272,8 @@ void scheduler_init(pcb_queue* ready_queue) {
     printf("[Tick :: %d] child process starts being scheduled\n", current_time);
 #endif
 
+    initialize_page_manager();
+
     if(signal(SIGUSR1, sigint_handler) == SIG_ERR) {
         perror("signal");
         sigint_handler(SIGINT);
@@ -286,19 +302,12 @@ void scheduler_init(pcb_queue* ready_queue) {
 #endif
 }
 
-
 void scheduler_run(pcb_queue* ready_queue, int n_process) {
     scheduler_init(ready_queue);
 
     // just work with handler function
     while(1) {
-
-        {
-            // thread launch
-
-        }
-
-        if(current_time > 100) {
+        if(current_time > 10000) {
             break;
         }
     };
