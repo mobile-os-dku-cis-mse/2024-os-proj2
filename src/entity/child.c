@@ -163,7 +163,7 @@ int child_main(int argc, char **argv) {
                 vaddr_t msg;
                 msg.msg_t = 3;
                 msg.pid = getpid();
-                msg.vaddr = generate_uniform_vaddr();
+                msg.vaddr = generate_zipfian_vaddr();
 
                 //fprintf(stderr, "[Child::%d]msg_id = %d, msg_t = %d, PID = %d, Vaddr = 0x%04x\n",
                 //                                     getpid(), msg_queue_id_page, msg.msg_t, msg.pid, msg.vaddr);

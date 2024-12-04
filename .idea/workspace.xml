@@ -39,37 +39,13 @@
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/child.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/child.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/page_manager/page_manager.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/page_manager/page_manager.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/scheduler.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/scheduler.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/main.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/main.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/frame_list/frame_list.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/frame_list/frame_list.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/msg_queue/message_queue.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/msg_queue/message_queue.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/paging/paging.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/paging/paging.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/pid_queue/pid_queue.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/pid_queue/pid_queue.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/process/process.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/process/process.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/swap/swap.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/swap/swap.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/timer/timer.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/timer/timer.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/tlb/tlb.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/util/tlb/tlb.c.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/scheduler" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/scheduler" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory_access_pattern.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scheduler_dump.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory_access_log.csv" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/memory_access_log.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/memory_access_pattern.txt" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/memory_access_pattern.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entity/child.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/child.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/page_manager/page_manager.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/page_manager/page_manager.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/scheduler.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/scheduler.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/frame_list/frame_list.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/frame_list/frame_list.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/frame_list/frame_list.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/frame_list/frame_list.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/msg_queue/message_queue.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/msg_queue/message_queue.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/paging/paging.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/paging/paging.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/paging/paging.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/paging/paging.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/pid_queue/pid_queue.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/pid_queue/pid_queue.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/pid_queue/pid_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/pid_queue/pid_queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/swap/swap.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/swap/swap.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/swap/swap.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/swap/swap.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/timer/timer.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/timer/timer.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/tlb/tlb.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/tlb/tlb.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/tlb/tlb.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/tlb/tlb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swapfile.bin" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/swapfile.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tlb_cache_hit_log.csv" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/tlb_cache_hit_log.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -2150,36 +2126,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "C/C++ 파일.paging_test.c.executor": "Debug",
-    "C/C++ 파일.paging_test3.c.executor": "Run",
-    "CMake Application.scheduler.executor": "Run",
-    "CMake 애플리케이션.frame_list_test.executor": "Debug",
-    "CMake 애플리케이션.paging_test.executor": "Debug",
-    "CMake 애플리케이션.paging_test2.executor": "Run",
-    "CMake 애플리케이션.paging_test3.executor": "Debug",
-    "CMake 애플리케이션.paging_test4.executor": "Debug",
-    "CMake 애플리케이션.scheduler.executor": "Run",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.west.config.association.type.startup.service": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "32224560__dev__stage",
-    "last_opened_file_path": "/home/hochacha/os_hw/2024-os-proj2/src/util/paging/paging_test.c",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;C/C++ 파일.paging_test.c.executor&quot;: &quot;Debug&quot;,
+    &quot;C/C++ 파일.paging_test3.c.executor&quot;: &quot;Run&quot;,
+    &quot;CMake Application.scheduler.executor&quot;: &quot;Run&quot;,
+    &quot;CMake 애플리케이션.frame_list_test.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake 애플리케이션.paging_test.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake 애플리케이션.paging_test2.executor&quot;: &quot;Run&quot;,
+    &quot;CMake 애플리케이션.paging_test3.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake 애플리케이션.paging_test4.executor&quot;: &quot;Debug&quot;,
+    &quot;CMake 애플리케이션.scheduler.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;32224560__dev__stage&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/hochacha/os_hw/2024-os-proj2/src/util/paging/paging_test.c&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" side_tool="true" />
@@ -2187,7 +2163,7 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" />
       <window_info id="Learn" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2731911" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27348268" />
       <window_info id="Commit" order="1" weight="0.25" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" />
@@ -2200,12 +2176,12 @@
       <window_info anchor="bottom" id="Version Control" order="0" weight="0.23527299" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" weight="0.21300288" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.23527299" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.13256049" />
       <window_info anchor="bottom" id="Services" order="4" weight="0.23527299" />
       <window_info anchor="bottom" id="CMake" order="5" weight="0.23527299" />
       <window_info anchor="bottom" id="Debug" order="6" weight="0.41918105" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.41918105" />
-      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.465311" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.13256049" />
+      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.13256049" />
       <window_info anchor="bottom" id="Build" order="9" weight="0.329497" />
       <window_info anchor="bottom" id="Find" order="10" weight="0.2880597" />
       <window_info anchor="right" id="PR AI Assistant" />
@@ -2226,11 +2202,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/runtime_logs/vaddr_gausian_random" />
+      <recent name="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random" />
+      <recent name="$PROJECT_DIR$/runtime_logs" />
       <recent name="$PROJECT_DIR$/src/entity/page_manager" />
       <recent name="$PROJECT_DIR$/legacy" />
-      <recent name="$PROJECT_DIR$/src/entity" />
-      <recent name="$PROJECT_DIR$/src/util/tlb" />
-      <recent name="$PROJECT_DIR$/src/util/timer" />
     </key>
   </component>
   <component name="RunManager" selected="CMake 애플리케이션.scheduler">
@@ -2312,7 +2288,8 @@
       <workItem from="1732891455693" duration="47086000" />
       <workItem from="1733247929216" duration="17118000" />
       <workItem from="1733317111909" duration="692000" />
-      <workItem from="1733318161614" duration="18324000" />
+      <workItem from="1733318161614" duration="19208000" />
+      <workItem from="1733337862066" duration="1439000" />
     </task>
     <servers />
   </component>
