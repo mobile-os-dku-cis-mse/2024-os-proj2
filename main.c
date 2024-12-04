@@ -129,7 +129,7 @@ unsigned int mem_read(unsigned int vaddr)
 	int sflag = addr >> 31;
 	addr &= 0x7FFFFFFF;
 
-	dprintf(logfd, "\t\t-> [0x%05X%s] contains 0x%08X\n", addr, sflag ? "[swap]" : "", mem[addr]);
+	dprintf(logfd, "\t\t-> [0x%05X%s] contains 0x%08X\n", addr, sflag ? "[swap]" : "", sflag ? swap[addr] : mem[addr]);
 	return sflag ? swap[addr] : mem[addr];
 }
 
