@@ -1,2 +1,2 @@
 build:
-	gcc *.c ds/*.c shared/*.c proc/*.c
+	gcc *.c ds/*.c shared/*.c proc/*.c -o vmem.out

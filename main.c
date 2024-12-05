@@ -12,9 +12,7 @@
 #include <sys/msg.h>
 
 #include "proc/pcb.h"
-#include "ds/pcbq.h"
 #include "ds/iarrq.h"
-#include "ds/ilinkq.h"
 #include "shared/shared.h"
 
 #define TIME_QUANTUM 10
@@ -42,14 +40,8 @@ void mem_init()
 	}
 }
 
-unsigned int mem_swap()
+unsigned int mem_swap(unsigned int spfn)
 {
-	if (iarrq_empty(&spageq))
-	{
-		dprintf(logfd, "\t\t-> cannot assign new page frame; not enough swap memory\n");
-		return -1;
-	}
-
 	// find available page frame to swap out.
 	unsigned int pfn;
 	for (pfn = 0; pfn < PAGE_COUNT; pfn++)
@@ -58,65 +50,92 @@ unsigned int mem_swap()
 			break;
 	}
 
+	if (pfn == PAGE_COUNT)
+		printf("WOAH\n");
+
+	unsigned int svpfn = pfnmap[pfn] >> 4;
 	unsigned int off1 = (pfnmap[pfn] & 0xFC00) >> 10;
 	unsigned int off2 = (pfnmap[pfn] & 0x3F0) >> 4;
 	pcb *sproc = proc_arr + (pfnmap[pfn] & 0xF);
 
 	unsigned int src = sproc->page_tbl[off1][off2];
-	unsigned int dst = iarrq_pop(&spageq);
-	memcpy(swap+(dst<<8), mem+(src<<8), PAGE_SIZE * sizeof(unsigned int));
-	sproc->page_tbl[off1][off2] = dst | 0x80000000;
+	memcpy(&swap[spfn << 8], &mem[pfn << 8], PAGE_SIZE * sizeof(unsigned int));
+	sproc->page_tbl[off1][off2] = spfn | 0x80000000;
 
+	dprintf(logfd, "\t\t-> swapped out process[%d]:0x%05X to 0x%05X[swap]\n", sproc->pid, svpfn << 8, spfn << 8);
+	dprintf(logfd, "\t\t-> 0x%05X is now available\n", pfn << 8);
 	return pfn;
 }
 
 unsigned int mem_translate(unsigned int vaddr)
 {
+	unsigned int vpfn = vaddr >> 8;
 	unsigned int off1 = (vaddr & 0xFC000) >> 14;
 	unsigned int off2 = (vaddr & 0x3F00) >> 8;
-	unsigned int off = (vaddr & 0xFF);
-	int sflag = 0;
+	unsigned int off = vaddr & 0xFF;
 
+	// first level entry does not exist.
 	if (!proc_ptr->page_tbl[off1])
 	{
 		proc_ptr->page_tbl[off1] = malloc(ENTRY_COUNT * sizeof(unsigned int));
 		memset(proc_ptr->page_tbl[off1], 0xFF, ENTRY_COUNT * sizeof(unsigned int));
-		ilinkq_push(&proc_ptr->p1entryq, off1);
-
 		dprintf(logfd, "\t\t-> new page table allocated\n");
 	}
 
-	if (proc_ptr->page_tbl[off1][off2] == -1)
+	unsigned int *pfn_ptr = proc_ptr->page_tbl[off1] + off2;
+	unsigned int pfn = *pfn_ptr;
+	
+	// page frame number not assigned yet.
+	if (pfn == -1)
 	{
-		// actual pfn, virtual pfn.
-		unsigned int pfn;
-
 		if (iarrq_empty(&mpageq))
 		{
 			dprintf(logfd, "\t\t-> no available page frames; resorting to swap memory\n");
 
-			// set swap flag.
-			sflag = 1;
-			pfn = mem_swap();
-
-			if (pfn == -1)
+			if (iarrq_empty(&spageq))
+			{
+				dprintf(logfd, "\t\t-> cannot assign new page frame; not enough swap memory\n");
 				return -1;
+			}
+
+			pfn = mem_swap(iarrq_pop(&spageq));
 		}
 		else
 			pfn = iarrq_pop(&mpageq);
 
-		unsigned int vpfn = (off1 << 6) | off2;
-
-		proc_ptr->page_tbl[off1][off2] = pfn;
-		pfnmap[pfn] = (vpfn << 4) | proc_idx;
-		ilinkq_push(&proc_ptr->p2entryq, vpfn);
-
 		dprintf(logfd, "\t\t-> new page frame assigned\n");
 	}
 
-	unsigned int addr = (proc_ptr->page_tbl[off1][off2] << 8) + off;
-	dprintf(logfd, "\t\t-> translated to physical address 0x%05X%s\n", addr, sflag ? "[swap]" : "");
-	return addr | (sflag << 31);
+	// page exists in swap memory.
+	if (pfn & 0x80000000)
+	{
+		static unsigned int __spage[PAGE_SIZE];
+		unsigned int spfn = pfn & 0x7FFFFFFF;
+
+		dprintf(logfd, "\t\t-> page exists in swap section\n");
+
+		if (iarrq_empty(&mpageq))
+		{
+			memcpy(__spage, &swap[spfn << 8], PAGE_SIZE * sizeof(unsigned int));
+			pfn = mem_swap(spfn);
+			memcpy(&mem[pfn << 8], __spage, PAGE_SIZE * sizeof(unsigned int));
+		}
+		else
+		{
+			pfn = iarrq_pop(&mpageq);
+			memcpy(&mem[pfn << 8], &swap[spfn << 8], PAGE_SIZE * sizeof(unsigned int));
+			iarrq_push(&spageq, spfn);
+		}
+		
+		dprintf(logfd, "\t\t-> page frame reassigned\n");
+	}
+
+	*pfn_ptr = pfn;
+	pfnmap[pfn] = (vpfn << 4) | proc_idx;
+
+	unsigned int addr = (pfn << 8) | off;
+	dprintf(logfd, "\t\t-> translated to physical address 0x%05X\n", addr);
+	return addr;
 }
 
 unsigned int mem_read(unsigned int vaddr)
@@ -126,11 +145,8 @@ unsigned int mem_read(unsigned int vaddr)
 	if (addr == -1)
 		return -1;
 
-	int sflag = addr >> 31;
-	addr &= 0x7FFFFFFF;
-
-	dprintf(logfd, "\t\t-> [0x%05X%s] contains 0x%08X\n", addr, sflag ? "[swap]" : "", sflag ? swap[addr] : mem[addr]);
-	return sflag ? swap[addr] : mem[addr];
+	dprintf(logfd, "\t\t-> [0x%05X] contains 0x%08X\n", addr, mem[addr]);
+	return mem[addr];
 }
 
 void mem_write(unsigned int vaddr, unsigned int val)
@@ -139,16 +155,9 @@ void mem_write(unsigned int vaddr, unsigned int val)
 
 	if (addr == -1)
 		return;
-
-	int sflag = addr >> 31;
-	addr &= 0x7FFFFFFF;
-
-	if (sflag)
-		swap[addr] = val;
-	else
-		mem[addr] = val;
-
-	dprintf(logfd, "\t\t-> 0x%08X written to [0x%05X%s]\n", val, addr, sflag ? "[swap]" : "");
+	
+	mem[addr] = val;
+	dprintf(logfd, "\t\t-> 0x%08X written to [0x%05X]\n", val, addr);
 }
 
 void alarm_handler(int)
@@ -254,7 +263,7 @@ void loop()
 	set_sa_handler(SIGALRM, alarm_handler);
 	enable_ticks();
 
-	while (ticks < 1000)
+	while (ticks < 5000)
 	{
 		pause();
 		schedule();

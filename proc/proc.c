@@ -22,7 +22,7 @@ void run()
 	while (1)
 	{
 		if (!burst)
-			burst = rand() % 200 + 1;
+			burst = rand() % 100 + 101;
 
 		pause();
 		
