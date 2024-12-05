@@ -221,6 +221,8 @@ void spawn()
 
 void schedule()
 {
+	printf("scheduler invoked, tick %d\n", ticks);
+
 	static int remaining = TIME_QUANTUM;
 	static struct msgbuf buf;
 
