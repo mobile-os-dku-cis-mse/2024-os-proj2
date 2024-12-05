@@ -24,7 +24,8 @@ extern void run();
 int logfd;
 int ticks;
 pcb proc_arr[PROCESS_COUNT];
-int proc_ptr;
+pcb *proc_ptr;
+int proc_idx;
 
 void mem_init()
 {
@@ -53,18 +54,18 @@ unsigned int mem_swap()
 	unsigned int pfn;
 	for (pfn = 0; pfn < PAGE_COUNT; pfn++)
 	{
-		if ((pfnmap[pfn] & 0xF) != proc_ptr)
+		if ((pfnmap[pfn] & 0xF) != proc_idx)
 			break;
 	}
 
 	unsigned int off1 = (pfnmap[pfn] & 0xFC00) >> 10;
 	unsigned int off2 = (pfnmap[pfn] & 0x3F0) >> 4;
-	int proc_idx = pfnmap[pfn] & 0xF;
+	pcb *sproc = proc_arr + (pfnmap[pfn] & 0xF);
 
-	unsigned int src = proc_arr[proc_idx].page_tbl[off1][off2];
+	unsigned int src = sproc->page_tbl[off1][off2];
 	unsigned int dst = iarrq_pop(&spageq);
 	memcpy(swap+(dst<<8), mem+(src<<8), PAGE_SIZE * sizeof(unsigned int));
-	proc_arr[proc_idx].page_tbl[off1][off2] = dst | 0x80000000;
+	sproc->page_tbl[off1][off2] = dst | 0x80000000;
 
 	return pfn;
 }
@@ -76,17 +77,16 @@ unsigned int mem_translate(unsigned int vaddr)
 	unsigned int off = (vaddr & 0xFF);
 	int sflag = 0;
 
-	pcb *cur = &proc_arr[proc_ptr];
-	if (!cur->page_tbl[off1])
+	if (!proc_ptr->page_tbl[off1])
 	{
-		cur->page_tbl[off1] = malloc(ENTRY_COUNT * sizeof(unsigned int));
-		memset(cur->page_tbl[off1], 0xFF, ENTRY_COUNT * sizeof(unsigned int));
-		ilinkq_push(&cur->p1entryq, off1);
+		proc_ptr->page_tbl[off1] = malloc(ENTRY_COUNT * sizeof(unsigned int));
+		memset(proc_ptr->page_tbl[off1], 0xFF, ENTRY_COUNT * sizeof(unsigned int));
+		ilinkq_push(&proc_ptr->p1entryq, off1);
 
 		dprintf(logfd, "\t\t-> new page table allocated\n");
 	}
 
-	if (cur->page_tbl[off1][off2] == -1)
+	if (proc_ptr->page_tbl[off1][off2] == -1)
 	{
 		// actual pfn, virtual pfn.
 		unsigned int pfn;
@@ -107,14 +107,14 @@ unsigned int mem_translate(unsigned int vaddr)
 
 		unsigned int vpfn = (off1 << 6) | off2;
 
-		cur->page_tbl[off1][off2] = pfn;
-		pfnmap[pfn] = (vpfn << 4) | proc_ptr;
-		ilinkq_push(&cur->p2entryq, vpfn);
+		proc_ptr->page_tbl[off1][off2] = pfn;
+		pfnmap[pfn] = (vpfn << 4) | proc_idx;
+		ilinkq_push(&proc_ptr->p2entryq, vpfn);
 
 		dprintf(logfd, "\t\t-> new page frame assigned\n");
 	}
 
-	unsigned int addr = (cur->page_tbl[off1][off2] << 8) + off;
+	unsigned int addr = (proc_ptr->page_tbl[off1][off2] << 8) + off;
 	dprintf(logfd, "\t\t-> translated to physical address 0x%05X%s\n", addr, sflag ? "[swap]" : "");
 	return addr | (sflag << 31);
 }
@@ -206,6 +206,8 @@ void spawn()
 		else
 			run();
 	}
+
+	proc_ptr = proc_arr;
 }
 
 void schedule()
@@ -213,12 +215,12 @@ void schedule()
 	static int remaining = TIME_QUANTUM;
 	static struct msgbuf buf;
 
-	kill(proc_arr[proc_ptr].pid, SIGCONT);
+	kill(proc_ptr->pid, SIGCONT);
 	memset(&buf, 0, sizeof(buf));
 	msgrcv(msqid, &buf, sizeof(buf) - sizeof(long), getpid(), 0);
 
 	dprintf(logfd, "log message at tick %d\n", ticks);
-	dprintf(logfd, "process[%d] gets cpu time, %d remaining\n", proc_arr[proc_ptr].pid, buf.burst);
+	dprintf(logfd, "process[%d] gets cpu time, %d remaining\n", proc_ptr->pid, buf.burst);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -236,9 +238,10 @@ void schedule()
 	if (!--buf.burst || !--remaining)
 	{
 		if (!buf.burst)
-			pcb_reset(&proc_arr[proc_ptr]);
+			pcb_reset(proc_ptr);
 
-		proc_ptr = (proc_ptr + 1) % PROCESS_COUNT;
+		proc_idx = (proc_idx + 1) % PROCESS_COUNT;
+		proc_ptr = proc_arr + proc_idx;
 		remaining = TIME_QUANTUM;
 		dprintf(logfd, "context switched\n");
 	}
