@@ -36,16 +36,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a8d5113f-958d-406e-b0cf-dda014e47237" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/child.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/scheduler.dir/src/entity/child.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/scheduler" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/scheduler" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory_access_log.csv" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/memory_access_log.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/memory_access_pattern.txt" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/memory_access_pattern.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/child.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/child.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swapfile.bin" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/swapfile.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tlb_cache_hit_log.csv" beforeDir="false" afterPath="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random/tlb_cache_hit_log.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -2163,7 +2153,7 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" />
       <window_info id="Learn" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27348268" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3811682" />
       <window_info id="Commit" order="1" weight="0.25" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" />
@@ -2176,12 +2166,12 @@
       <window_info anchor="bottom" id="Version Control" order="0" weight="0.23527299" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" weight="0.21300288" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.13256049" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.4452285" />
       <window_info anchor="bottom" id="Services" order="4" weight="0.23527299" />
       <window_info anchor="bottom" id="CMake" order="5" weight="0.23527299" />
       <window_info anchor="bottom" id="Debug" order="6" weight="0.41918105" />
       <window_info anchor="bottom" id="Messages" order="7" weight="0.13256049" />
-      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.13256049" />
+      <window_info anchor="bottom" id="Run" order="8" weight="0.4452285" />
       <window_info anchor="bottom" id="Build" order="9" weight="0.329497" />
       <window_info anchor="bottom" id="Find" order="10" weight="0.2880597" />
       <window_info anchor="right" id="PR AI Assistant" />
@@ -2202,11 +2192,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/runtime_logs/vaddr_zifpian_random" />
       <recent name="$PROJECT_DIR$/runtime_logs/vaddr_gausian_random" />
       <recent name="$PROJECT_DIR$/runtime_logs/vaddr_uniform_random" />
       <recent name="$PROJECT_DIR$/runtime_logs" />
       <recent name="$PROJECT_DIR$/src/entity/page_manager" />
-      <recent name="$PROJECT_DIR$/legacy" />
     </key>
   </component>
   <component name="RunManager" selected="CMake 애플리케이션.scheduler">
@@ -2289,7 +2279,7 @@
       <workItem from="1733247929216" duration="17118000" />
       <workItem from="1733317111909" duration="692000" />
       <workItem from="1733318161614" duration="19208000" />
-      <workItem from="1733337862066" duration="1439000" />
+      <workItem from="1733337862066" duration="3617000" />
     </task>
     <servers />
   </component>

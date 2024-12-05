@@ -1,17 +1,43 @@
-fact1: legacy/file1.c legacy/file2.c
-	gcc	-o fact1 file1.c file2.c 
+# Makefile
 
-fact2: file1.o file2.o
-	gcc -o fact2 file1.o file2.o
+BUILD_DIR = build
+CMAKE_MIN_VERSION = 3.22
+CURRENT_DIR := $(shell pwd)
 
-file1.o: legacy/file1.c
-	gcc -c file1.c
 
-file2.o: legacy/file2.c
-	gcc -c file2.c
+# CMake 존재 여부 및 버전 확인 함수
+define check_cmake
+	@if ! command -v cmake >/dev/null 2>&1; then \
+		echo "Error: CMake is not installed."; \
+		echo "Install CMake over than ver. $(CMAKE_MIN_VERSION) "; \
+		exit 1; \
+	else \
+		CMAKE_VERSION=$$(cmake --version | head -n1 | cut -d" " -f3); \
+		REQUIRED_VERSION=$(CMAKE_MIN_VERSION); \
+		if [ $$(printf '%s\n' "$$REQUIRED_VERSION" "$$CMAKE_VERSION" | sort -V | head -n1) != "$$REQUIRED_VERSION" ]; then \
+			echo "Error: Installed CMake version ($$CMAKE_VERSION) is too old."; \
+			echo "Install CMake over than ver. $(CMAKE_MIN_VERSION)"; \
+			exit 1; \
+		fi; \
+	fi
+endef
 
-%.o: %.c
-	gcc -c -o $@ $<
+.PHONY: all clean
 
-fact3: file1.o file2.o
-	gcc -o $@ $^
+all: $(BUILD_DIR)/Makefile
+	$(MAKE) -C $(BUILD_DIR)
+	@echo "======================================"
+	@echo "🎉 success to build"
+	@echo "execute file location: ./build/scheduler"
+	@echo "======================================"
+
+$(BUILD_DIR)/Makefile: CMakeLists.txt
+	$(call check_cmake)
+	mkdir -p $(BUILD_DIR)
+	cd $(BUILD_DIR) && cmake ..
+
+
+
+clean:
+	rm -rf $(BUILD_DIR)
+

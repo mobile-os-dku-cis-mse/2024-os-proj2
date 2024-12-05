@@ -34,45 +34,4 @@ add_executable(scheduler
 
 )
 
-
-add_executable(
-        paging_test
-        src/util/paging/test/paging_test.c
-        src/util/tlb/tlb.c
-        src/util/frame_list/frame_list.c
-        src/util/paging/paging.c
-)
-
-add_executable(
-        paging_test2
-        src/util/paging/test/paging_test2.c
-        src/util/tlb/tlb.c
-        src/util/frame_list/frame_list.c
-        src/util/paging/paging.c
-)
-
-add_executable(
-        frame_list_test
-        src/util/frame_list/frame_list.c
-        src/util/frame_list/frame_list_test.c
-)
-
-add_executable(
-        paging_test3
-        src/util/paging/test/paging_test3.c
-        src/util/tlb/tlb.c
-        src/util/frame_list/frame_list.c
-        src/util/paging/paging.c
-        src/util/swap/swap.c
-)
-
-add_executable(
-        paging_test4
-        src/util/paging/test/paging_test4.c
-        src/util/tlb/tlb.c
-        src/util/frame_list/frame_list.c
-        src/util/paging/paging.c
-        src/util/swap/swap.c
-)
-
 target_link_libraries(scheduler m)
