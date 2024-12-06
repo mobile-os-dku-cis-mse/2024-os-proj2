@@ -116,12 +116,14 @@ unsigned int mem_translate(unsigned int vaddr)
 
 		if (iarrq_empty(&mpageq))
 		{
+			dprintf(logfd, "\t\t-> no page available in memory\n");
 			memcpy(__spage, &swap[spfn << 8], PAGE_SIZE * sizeof(unsigned int));
 			pfn = mem_swap(spfn);
 			memcpy(&mem[pfn << 8], __spage, PAGE_SIZE * sizeof(unsigned int));
 		}
 		else
 		{
+			dprintf(logfd, "\t\t-> new page available in memory\n");
 			pfn = iarrq_pop(&mpageq);
 			memcpy(&mem[pfn << 8], &swap[spfn << 8], PAGE_SIZE * sizeof(unsigned int));
 			iarrq_push(&spageq, spfn);
