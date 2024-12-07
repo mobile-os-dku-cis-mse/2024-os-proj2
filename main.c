@@ -50,9 +50,6 @@ unsigned int mem_swap(unsigned int spfn)
 			break;
 	}
 
-	if (pfn == PAGE_COUNT)
-		printf("WOAH\n");
-
 	unsigned int svpfn = pfnmap[pfn] >> 4;
 	unsigned int off1 = (pfnmap[pfn] & 0xFC00) >> 10;
 	unsigned int off2 = (pfnmap[pfn] & 0x3F0) >> 4;
