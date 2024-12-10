@@ -1,0 +1,18 @@
+# 설정 관련
+time_tick_limit=10000            # time_tick
+page_replacement_algorithm=3    # FIFO, LRU, LFU, SECOND_CHANCE (0, 1, 2, 3)
+tlb_cache_replacement=3        # RANDOM, FIFO, LRU, LFU (0,1,2,3)
+
+# 크기 관련, 아래 해당 하는 값으로만 설정해야함.
+page_size_kb=4                    # 1, 4, 16, 64
+physical_memory_size_mb=32        # 8, 16, 32, 64, 128
+tlb_cache_size=32                # 0, 32, 64, 128, 256, 512, 1024
+
+status=4
+random=0
+
+# status, random
+# 1: read 만 하게 함 read는 pc값 순서대로 random 값이 1이면 PC값을 난수를 받아  진행.
+# 2: write만 하게 함 write은 pc값 순서대로 random 값이 1이면 PC값을 난수를 받아  진행.
+# 3: read time_tick 만큼 진행, write 또한 time_tick 만큼 진행, random 값이 1이면 PC값을 난수를 받아  진행.
+# 4: data.txt의 내용대로 수행함. random 값 무관.
